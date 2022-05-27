@@ -75,4 +75,4 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # Puerts generated file
-/[Aa]ssets/Gen/
+/[Aa]ssets/[Gg]en/
