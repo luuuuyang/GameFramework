@@ -13,4 +13,20 @@ public class Common
             Application.Quit();
         #endif
     }
+
+    public static void Log(string message){
+        Debug.Log(message);
+        uREPL.Log.Output(message.ToString());
+    }
+
+    public static void Warn(string message){
+        Debug.LogWarning(message);
+        uREPL.Log.Warn(message.ToString());
+    }
+
+    public static void Error(string message){
+        Debug.LogError(message);
+        uREPL.Log.Error(message.ToString());
+    }
+
 }

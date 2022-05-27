@@ -1,6 +1,6 @@
 import { GameEntrance } from "csharp"
 import { GameObject, Transform, Vector3 } from "Utils/Components"
-import { GetComponent, T } from "Utils/Utils"
+import { GetComponent, T, Warn } from "Utils/Utils"
 import { IGameLevel } from "./Interface/IGameEntrance"
 console.log("This is where the game start !!!")
 
@@ -14,7 +14,7 @@ class Entrance implements IGameLevel {
         this.bindTo.JsOnDestroy = ()=> {this.OnDestroy()}
     }
     OnStart(): void {
-        console.warn("Start Game....!!")
+        Warn("Game Start")
         let cube = GameObject.Find("Cube")
         let trans = GetComponent<Transform>(cube,T(Transform))
         if(trans!=null){
@@ -41,7 +41,7 @@ class Entrance implements IGameLevel {
         
     }
     OnDestroy(): void {
-        console.warn("Quit Game....!!")
+        Warn("Quit Game....!!")
     }
 }
 
