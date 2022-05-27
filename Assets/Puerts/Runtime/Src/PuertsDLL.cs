@@ -92,6 +92,7 @@ namespace Puerts
             } 
             catch(Exception e) 
             {
+                UnityEngine.Debug.LogWarning("PUERTS ERROR: GetApiLevel()"+e.ToString());
                 return GetLibVersion();
             }
         }
