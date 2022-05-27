@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "build": "node esbuild.config.js",
+    "dev":"nodemon"
+  },
+  "dependencies": {
+    "esbuild": "^0.14.41",
+    "nodemon": "^2.0.16"
+  }
+}

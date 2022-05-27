@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "jsx": "react",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "typeRoots": [
+      "../../Assets/Puerts/Typing",
+      "../../Assets/Gen/Typing",
+    ],
+    "outDir": "output",
+    "baseUrl": "SRC",
+    "allowJs": true
+  },
+}
