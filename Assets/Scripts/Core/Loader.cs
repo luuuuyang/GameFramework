@@ -1,12 +1,13 @@
 using System.IO;
 using System;
 using UnityEngine;
+using Puerts;
 
-public class GameScriptLoader : Puerts.ILoader
+public class Loader : ILoader
 {
     public string debugRoot { get; private set; }
 
-    public GameScriptLoader(string debugRoot)
+    public Loader(string debugRoot)
     {
         this.debugRoot = debugRoot;
     }

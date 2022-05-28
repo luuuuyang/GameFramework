@@ -1,13 +1,13 @@
-import { LevelRunner } from "csharp"
+import { TSBehaviour } from "csharp"
 
 /**
  * Basic Level Definition
  */
- interface IGameLevel {
+ interface ITSBehaviour {
     /**
      * the LevelRunner bind to
      */
-    bindTo:LevelRunner
+    bindTo: TSBehaviour
     /**
      * Call On Level Start
      */
@@ -24,5 +24,5 @@ import { LevelRunner } from "csharp"
 }
 
 export {
-    IGameLevel
+    ITSBehaviour
 }

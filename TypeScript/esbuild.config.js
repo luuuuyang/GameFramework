@@ -1,16 +1,5 @@
-/**
- * Thanks https://github.com/luuuuyang
- * https://github.com/SadCatUnion/Ring-of-the-Blood-Cat-Soul/blob/main/Typescript/esbuild.config.js
- */
-
 const fs = require('fs');
 const path = require('path');
-
-let cfgStr = fs.readFileSync("./config.json",{
-    encoding:"utf-8"
-})
-
-let cfg = JSON.parse(cfgStr)
 
 function copyFileSync( source, target ) {
 
@@ -48,11 +37,20 @@ function copyFolderRecursiveSync( source, targetFolder ) {
 }
 
 require('esbuild').build({
-    entryPoints: cfg.Entrance,
-    bundle: cfg.bundle,
-    format: cfg.format,
-    outfile: cfg.outfile,
-    external: cfg.external,
+    entryPoints: ['./src/core/Entrance.ts'],
+    bundle: true,
+    format: 'cjs',
+    outfile: './outPut/Entrance.js',
+    external: ['csharp', 'puerts'],
+    watch: {
+        onRebuild(error, result) {
+          if (error) console.error('watch build failed:', error)
+          else {
+            console.log('watch build succeeded:', result)
+            copyFolderRecursiveSync("outPut", "../Assets/StreamingAssets")
+          }
+        },
+      },
 }).then(result => {
-    copyFolderRecursiveSync(cfg.outputPath, cfg.streamPath)
+    console.log('watching...')
 })

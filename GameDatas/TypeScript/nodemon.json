@@ -1,7 +1,0 @@
-{
-    "watch": ["SRC"],
-    "ignore": ["SRC/**/*.test.ts"],
-    "ext": "ts,mjs,js,json,graphql",
-    "exec": "node esbuild.config.js",
-    "legacyWatch": true
-  }

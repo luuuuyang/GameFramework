@@ -6,11 +6,11 @@
     "jsx": "react",
     "noImplicitAny": true,
     "typeRoots": [
-      "../../Assets/Puerts/Typing",
-      "../../Assets/Gen/Typing",
+      "../Assets/Puerts/Typing",
+      "../Assets/Gen/Typing",
     ],
     "outDir": "output",
-    "baseUrl": "SRC",
+    "baseUrl": "src",
     "strict": true
   },
 }

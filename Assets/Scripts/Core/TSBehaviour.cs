@@ -3,56 +3,48 @@ using UnityEngine;
 using System.Collections;
 using Puerts;
 
-public class GameEntrance : MonoBehaviour
+public class TSBehaviour : MonoBehaviour
 {
-    static IEnumerator _WaitForSeconds(float count, Action CallBack)
+    static IEnumerator _WaitForSeconds(float count, Action callback)
     {
         yield return new WaitForSeconds(count);
-        CallBack();
+        callback();
     }
 
-    delegate void LoaderInit(GameEntrance levelRunner);
+    delegate void LoaderInit(TSBehaviour monoBehaviour);
 
     public string EntranceMod = "Entrance";
 
-    private JsEnv env;
+    static JsEnv jsEnv;
 
     //public Action JsAwake;
     public Action JsStart;
     public Action JsUpdate;
-
     public Action JsFixedUpdate;
     public Action JsOnDestroy;
 
-    void Awake()
+    void OnEnable()
     {
-        if (env == null)
+        if (jsEnv == null)
         {
-            env = GlobalJSEnv.Env;
+            jsEnv = new JsEnv(new Loader(""));
+        }
+        var init = jsEnv.Eval<LoaderInit>($"const Entrance = require('{EntranceMod}'); Entrance.Init");
+        if (init != null)
+        {
+            init(this);
         }
     }
-
-    void RunScript()
-    {
-        var Init = env.Eval<LoaderInit>($"const Entrance = require('{EntranceMod}');Entrance.Init", EntranceMod + ":Runner");
-        if (Init != null)
-        {
-            Init(this);
-        }
-
-        if (JsStart != null) JsStart();
-    }
-
 
     void Start()
     {
-        RunScript();
+        if (JsStart != null) JsStart();
     }
 
     // Update is called once per frame
     void Update()
     {
-        env.Tick();
+        jsEnv.Tick();
         if (JsUpdate != null) JsUpdate();
     }
 
@@ -63,10 +55,14 @@ public class GameEntrance : MonoBehaviour
 
     void OnDestroy()
     {
-        if (JsOnDestroy != null) JsOnDestroy();
-        JsFixedUpdate = null;
         JsStart = null;
+        JsFixedUpdate = null;
         JsUpdate = null;
         JsOnDestroy = null;
+    }
+
+    void OnDisable()
+    {
+        if (JsOnDestroy != null) JsOnDestroy();
     }
 }

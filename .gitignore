@@ -76,3 +76,6 @@ crashlytics-build.properties
 
 # Puerts generated file
 /[Aa]ssets/[Gg]en/
+/[Aa]ssets/[Ss]treaming[Aa]ssets/
+/[Tt]ype[Ss]cript/node_modules/
+/[Tt]ype[Ss]cript/outPut/

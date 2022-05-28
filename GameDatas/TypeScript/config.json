@@ -1,9 +1,0 @@
-{
-    "Entrance":["./SRC/Entrance.ts"],
-    "outputPath":"../outPut",
-    "outfile": "../outPut/Entrance.js",
-    "format": "cjs",
-    "external": ["csharp","puerts"],
-    "streamPath" :"../../Assets/StreamingAssets",
-    "bundle": true
-}

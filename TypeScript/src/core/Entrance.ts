@@ -1,20 +1,18 @@
-import { GameEntrance } from "csharp"
+import { TSBehaviour } from "csharp"
+import { ITSBehaviour } from "Interface/ITSBehaviour"
 import { GameObject, Transform, Vector3 } from "Utils/Components"
 import { GetComponent, T, Warn } from "Utils/Utils"
-import { IGameLevel } from "./Interface/IGameEntrance"
-console.log("This is where the game start !!!")
 
-class Entrance implements IGameLevel {
-    bindTo: GameEntrance
-    constructor(bindTo: GameEntrance){
+class Entrance implements ITSBehaviour {
+    bindTo: TSBehaviour
+    constructor(bindTo: TSBehaviour){
         this.bindTo = bindTo
-        this.bindTo.JsStart = ()=> {this.OnStart()}
-        this.bindTo.JsUpdate = ()=> {this.OnUpdate()}
-        this.bindTo.JsFixedUpdate = ()=> {this.OnFixedUpdate()}
-        this.bindTo.JsOnDestroy = ()=> {this.OnDestroy()}
+        this.bindTo.JsStart = () => this.OnStart()
+        this.bindTo.JsFixedUpdate = () => this.OnFixedUpdate()
+        this.bindTo.JsUpdate = () => this.OnUpdate()
+        this.bindTo.JsOnDestroy = ()=> this.OnDestroy()
     }
     OnStart(): void {
-        Warn("Game Start")
         let cube = GameObject.Find("Cube")
         let trans = GetComponent<Transform>(cube,T(Transform))
         if(trans!=null){
@@ -41,12 +39,12 @@ class Entrance implements IGameLevel {
         
     }
     OnDestroy(): void {
-        Warn("Quit Game....!!")
+        
     }
 }
 
-function Init(bindTo:GameEntrance) {
-    return new Entrance(bindTo)
+function Init(bindTo: TSBehaviour) {
+    new Entrance(bindTo)
 }
 
 export {
