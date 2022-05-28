@@ -99,6 +99,7 @@ public class PuertsConfig
         "UnityEditor.dll",
         "Assembly-CSharp-Editor.dll",
         "com.tencent.puerts.core.Editor.dll",
+        "xasset.editor.dll",
     };
     //需要排除的类型
     static List<string> excludeTypes = new List<string>
@@ -172,6 +173,15 @@ public class PuertsConfig
         "UnityEngine.GUITexture",
         "UnityEngine.ClusterInput",
         "UnityEngine.ClusterNetwork",
+        //xasset
+        "UnityEngine.AudioSource",
+        "UnityEngine.LightingSettings",
+        "UnityEditor.GUI.TSProperties_CustomEditor",
+        "UnityEditor.GUI.Element",
+        "UnityEditor.GUI.DrawerInfo",
+        "UnityEditor.GUI.Display",
+        "UnityEditor.GUI.DisplayUtility",
+        "UnityEditor.GUI.Drawer",
         //System
         "System.Tuple",
         "System.Double",
