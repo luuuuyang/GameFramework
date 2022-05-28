@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const chokidar = require('chokidar');
+const esbuild = require('esbuild')
 
 function copyFileSync( source, target ) {
 
@@ -36,21 +38,14 @@ function copyFolderRecursiveSync( source, targetFolder ) {
     }
 }
 
-require('esbuild').build({
-    entryPoints: ['./src/core/Entrance.ts'],
-    bundle: true,
-    format: 'cjs',
-    outfile: './outPut/Entrance.js',
-    external: ['csharp', 'puerts'],
-    watch: {
-        onRebuild(error, result) {
-          if (error) console.error('watch build failed:', error)
-          else {
-            console.log('watch build succeeded:', result)
-            copyFolderRecursiveSync("outPut", "../Assets/StreamingAssets")
-          }
-        },
-      },
-}).then(result => {
-    console.log('watching...')
-})
+chokidar.watch('./src').on('all', (event, path) => {
+    esbuild.build({
+        entryPoints: ['./src/core/Entrance.ts'],
+        bundle: true,
+        format: 'cjs',
+        outfile: './outPut/Entrance.js',
+        external: ['csharp', 'puerts'],
+    }).then(result => {
+        copyFolderRecursiveSync("outPut", "../Assets/StreamingAssets")
+    })
+});

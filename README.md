@@ -13,5 +13,5 @@ Unity 2020.3.34f1c2, .Net Framework, Node.js
 - 菜单栏 Puerts/Generate Code
 - ``cd TypeScript``
 - ``npm/cnpm install``
-- ``npm run dev``
+- ``npm run watch-build``
 - Run Play
