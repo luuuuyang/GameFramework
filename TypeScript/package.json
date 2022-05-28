@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "node esbuild.config.js"
+    "dev": "node esbuild.config.js"
   },
   "dependencies": {
     "esbuild": "^0.14.41"
