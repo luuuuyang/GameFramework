@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using Puerts;
+using xasset;
 
 public class TSBehaviour : MonoBehaviour
 {
@@ -36,8 +37,14 @@ public class TSBehaviour : MonoBehaviour
         }
     }
 
-    void Start()
+    IEnumerator Start()
     {
+        var customLoader = GetComponent<CustomLoader>();
+        customLoader.Initialize();
+
+        var operation = Versions.InitializeAsync();
+        yield return operation;
+
         if (JsStart != null) JsStart();
     }
 

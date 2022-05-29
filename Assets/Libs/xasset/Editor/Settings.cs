@@ -58,7 +58,7 @@ namespace xasset.editor
 
         public static Settings GetDefaultSettings()
         {
-            return EditorUtility.FindOrCreateAsset<Settings>("Assets/xasset/Settings.asset");
+            return EditorUtility.FindOrCreateAsset<Settings>("Assets/Libs/xasset/Settings.asset");
         }
 
         /// <summary>

@@ -58,7 +58,8 @@ public class PuertsConfig
                 "UnityEngine",
                 "UnityEngine.UI",
                 "DG",
-                "DG.Tweening"
+                "DG.Tweening",
+                "xasset",
             };
             var unityTypes = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                               where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder)

@@ -16,7 +16,5 @@ MonoBehaviour:
   - .spriteatlas
   - .giparams
   - LightingData.asset
-  - TsProperties.cs
-  - TSProperties.cs
   scriptPlayMode: 0
   requestCopy: 0
