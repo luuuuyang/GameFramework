@@ -11,6 +11,7 @@ Unity 2020.3.34f1c2, .Net Framework, Node.js
 ## 快速开始
 
 - 菜单栏 Puerts/Generate Code
+- 菜单栏 xasset/Build Bundles
 - ``cd TypeScript``
 - ``npm/cnpm install``
 - ``npm run watch-build``
