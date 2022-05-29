@@ -1,7 +1,8 @@
-import { TSBehaviour, xasset } from "csharp"
+import { TSBehaviour } from "csharp"
 import { ITSBehaviour } from "Interface/ITSBehaviour"
 import { $promise } from "puerts"
 import { Vector3 } from "Utils/Components"
+import { InstantiateAsync } from "./resource"
 
 class Entrance implements ITSBehaviour {
     bindTo: TSBehaviour
@@ -26,7 +27,7 @@ class Entrance implements ITSBehaviour {
     }
 
     async Initialize() {
-        let cube = xasset.InstantiateObject.InstantiateAsync("Assets/Resources/Cube.prefab")
+        let cube = InstantiateAsync("Assets/Resources/Cube.prefab")
         await $promise(cube.Task)
 
         let trans = cube.result.transform
