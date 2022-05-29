@@ -2,7 +2,6 @@ import { DG, TSBehaviour, TSProperties, UnityEngine, xasset } from "csharp"
 import { ITSBehaviour } from "Interface/ITSBehaviour"
 import { $promise, $typeof } from "puerts"
 import { GameObject, Vector3 } from "Utils/Components"
-import { QuitGame } from "utils/Utils"
 import { InstantiateAsync, LoadAsync } from "./resource"
 
 class Entrance implements ITSBehaviour {
@@ -18,7 +17,7 @@ class Entrance implements ITSBehaviour {
         this.Initialize()
     }
     OnUpdate(): void {
-        
+        console.log("update")
     }
     OnFixedUpdate(): void {
         
@@ -42,7 +41,6 @@ class Entrance implements ITSBehaviour {
         for (let i = 0; i < propsComponent.Pairs.Length; i++) {
             let p = propsComponent.Pairs.get_Item(i);
             let go = p.value as GameObject 
-            console.log(p.key)
             if (p.key == "btnInstantiate") {
                 let btn = go.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
                 btn.onClick.AddListener(async () => {

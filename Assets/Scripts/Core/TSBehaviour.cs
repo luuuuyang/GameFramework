@@ -6,12 +6,6 @@ using xasset;
 
 public class TSBehaviour : MonoBehaviour
 {
-    static IEnumerator _WaitForSeconds(float count, Action callback)
-    {
-        yield return new WaitForSeconds(count);
-        callback();
-    }
-
     delegate void LoaderInit(TSBehaviour monoBehaviour);
 
     public string EntranceMod = "Entrance";
@@ -24,12 +18,15 @@ public class TSBehaviour : MonoBehaviour
     public Action JsFixedUpdate;
     public Action JsOnDestroy;
 
-    void OnEnable()
+    //async void RunScript()
+    void RunScript()
     {
         if (jsEnv == null)
         {
-            jsEnv = new JsEnv(new Loader(""));
+            jsEnv = new JsEnv(new Loader("E:/UnityProject/GameFramework/TypeScript/outPut/"), 9229);
+            //jsEnv = new JsEnv(new Loader("E:/UnityProject/GameFramework/Assets/StreamingAssets/"), 9229);
         }
+        jsEnv.WaitDebugger();
         var init = jsEnv.Eval<LoaderInit>($"const Entrance = require('{EntranceMod}'); Entrance.Init");
         if (init != null)
         {
@@ -37,8 +34,15 @@ public class TSBehaviour : MonoBehaviour
         }
     }
 
+    void OnEnable()
+    {
+        //RunScript();
+    }
+
     IEnumerator Start()
     {
+        RunScript();
+
         var customLoader = GetComponent<CustomLoader>();
         customLoader.Initialize();
 
@@ -48,7 +52,6 @@ public class TSBehaviour : MonoBehaviour
         if (JsStart != null) JsStart();
     }
 
-    // Update is called once per frame
     void Update()
     {
         jsEnv.Tick();
@@ -62,14 +65,18 @@ public class TSBehaviour : MonoBehaviour
 
     void OnDestroy()
     {
-        JsStart = null;
-        JsFixedUpdate = null;
-        JsUpdate = null;
-        JsOnDestroy = null;
+        //JsStart = null;
+        //JsFixedUpdate = null;
+        //JsUpdate = null;
+
+        if (JsOnDestroy != null) JsOnDestroy();
+        //JsOnDestroy = null;
+
+        jsEnv.Dispose();
     }
 
     void OnDisable()
     {
-        if (JsOnDestroy != null) JsOnDestroy();
+        
     }
 }

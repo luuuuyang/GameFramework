@@ -11,6 +11,7 @@
     ],
     "outDir": "output",
     "baseUrl": "src",
-    "strict": true
+    "strict": true,
+    "sourceMap": true
   },
 }
