@@ -8,6 +8,7 @@
     "typeRoots": [
       "../Assets/Puerts/Typing",
       "../Assets/Gen/Typing",
+      "typing"
     ],
     "outDir": "output",
     "baseUrl": "src",
