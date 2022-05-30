@@ -57,6 +57,7 @@ public class PuertsConfig
             {
                 "UnityEngine",
                 "UnityEngine.UI",
+                "UnityEngine.InputSystem",
                 "DG",
                 "DG.Tweening",
                 "xasset",
