@@ -16,3 +16,15 @@ Unity 2020.3.34f1c2, .Net Framework, Node.js
 - ``npm/cnpm install``
 - ``npm run watch-build``
 - Run Play
+
+# Todo
+## 悲猫3设计构想
+```mermaid
+classDiagram
+      DataBind <|-- UIBase
+      DataBind <|-- WorldObjectBase
+      UIBase <|-- CustomUI_1
+      UIBase <|-- CustomUI_2
+      WorldObjectBase <|-- CustomWorldObject_1
+      WorldObjectBase <|-- CustomWorldObject_2
+```
