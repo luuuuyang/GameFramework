@@ -57,7 +57,7 @@ public class PuertsConfig
             {
                 "UnityEngine",
                 "UnityEngine.UI",
-                "UnityEngine.InputSystem",
+                // "UnityEngine.InputSystem",
                 "DG",
                 "DG.Tweening",
                 "xasset",
@@ -184,6 +184,13 @@ public class PuertsConfig
         "UnityEditor.GUI.Display",
         "UnityEditor.GUI.DisplayUtility",
         "UnityEditor.GUI.Drawer",
+        //Input System
+        // "UnityEngine.InputSystem.InputSystem",
+        // "UnityEngine.InputSystem.InputActionRebindingExtensions",
+        // "UnityEngine.InputSystem.InputActionSetupExtensions",
+        // "UnityEngine.InputSystem.InputControlExtensions",
+        // "UnityEngine.InputSystem.InputExtensions",
+        // "UnityEngine.InputSystem.InputActionSetupExtensions",
         //System
         "System.Tuple",
         "System.Double",
