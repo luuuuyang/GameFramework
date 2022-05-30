@@ -10,11 +10,11 @@ const Log = Common.Log
 const Warn = Common.Warn
 const Error = Common.Error
 
-function GetComponent<T extends UnityEngine.Component>(gameObject: GameObject, type: System.Type): T | null {
-    if (gameObject != null){
-        let component = gameObject.GetComponent(type) as T;
-        if (component != null) {
-            return component
+function GetComponent<T extends UnityEngine.Component>(obj:GameObject,type:System.Type):T|null{
+    if(obj!=null){
+        let comp = obj.GetComponent(type) as T;
+        if(comp!=null){
+            return comp
         }
     }
     return null
