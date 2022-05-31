@@ -42,7 +42,7 @@ chokidar.watch('./src').on('all', (event, path) => {
     esbuild.build({
         bundle: true,
         entryPoints: ['./src/core/Entrance.ts'],
-        external: ['csharp', 'puerts', 'path', 'f'],
+        external: ['csharp', 'puerts', 'path', 'fs'],
         format: 'cjs',
         outfile: './outPut/Entrance.js',
         sourcemap: true,

@@ -1,3 +1,5 @@
+require("tools/source-map-support")
+
 import { DG, TSBehaviour, TSProperties, UnityEngine, xasset } from "csharp"
 import { ITSBehaviour } from "Interface/ITSBehaviour"
 import { $promise, $typeof } from "puerts"
@@ -17,7 +19,7 @@ class Entrance implements ITSBehaviour {
         this.Initialize()
     }
     OnUpdate(): void {
-        console.log("update")
+
     }
     OnFixedUpdate(): void {
         

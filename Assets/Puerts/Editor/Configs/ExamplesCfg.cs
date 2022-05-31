@@ -34,6 +34,8 @@ public class ExamplesCfg
                 typeof(Delegate),
                 typeof(System.Object),
                 typeof(System.Array),
+                typeof(System.IO.Path),
+                typeof(System.IO.File),
                 typeof(Type),
                 typeof(ParticleSystem),
                 typeof(Canvas),
