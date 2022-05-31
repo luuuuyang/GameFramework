@@ -21,10 +21,16 @@ Unity 2020.3.34f1c2, .Net Framework, Node.js
 ## 悲猫3设计构想
 ```mermaid
 classDiagram
-      DataBind <|-- UIBase
-      DataBind <|-- WorldObjectBase
-      UIBase <|-- CustomUI_1
-      UIBase <|-- CustomUI_2
-      WorldObjectBase <|-- CustomWorldObject_1
-      WorldObjectBase <|-- CustomWorldObject_2
+	UIBase <|-- UI_Template_1
+	UI_Template_1 <|-- UI_Custom_1
+	UI_Template_1 <|-- UI_Custom_2
+	WorldObjectBase <|-- WorldObject_Template_1
+	WorldObject_Template_1 <|-- WorldObject_Custom_1
+	WorldObject_Template_1 <|-- WorldObject_Custom_2
+	class UI_Template_1 {
+	Custom_Data
+	}
+	class WorldObject_Template_1 {
+		Custom_Data
+	}
 ```
