@@ -1,12 +1,11 @@
 require("tools/source-map-support")
 
 import { DG, TSBehaviour, TSProperties, UnityEngine, xasset } from "csharp"
-import { ITSBehaviour } from "Interface/ITSBehaviour"
 import { $promise, $typeof } from "puerts"
 import { GameObject, Vector3 } from "Utils/Components"
 import { InstantiateAsync, LoadAsync } from "./resource"
 
-class Entrance implements ITSBehaviour {
+class Entrance {
     bindTo: TSBehaviour
     constructor(bindTo: TSBehaviour){
         this.bindTo = bindTo
