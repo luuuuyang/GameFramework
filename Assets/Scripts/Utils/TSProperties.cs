@@ -119,6 +119,7 @@ public class TSProperties : MonoBehaviour
 #if UNITY_EDITOR
 namespace UnityEditor.GUI
 {
+    using System.IO;
     using System.Reflection;
     using UnityEditor;
     using UnityEditorInternal;
@@ -350,7 +351,7 @@ namespace UnityEditor.GUI
                     editor.Copy();
                     Debug.Log("已复制到剪贴板:\n" + code);
                 }
-                if (GUILayout.Button("parse declare code[add names]"))
+                if (GUILayout.Button("parse declare code [add names]"))
                 {
                     var editor = new TextEditor();
                     editor.OnFocus();
@@ -361,6 +362,17 @@ namespace UnityEditor.GUI
                         Debug.Log("已获取以下内容:\n" + code);
                         DisplayUtility.PraseCode(this, code);
                     }
+                }
+                if (GUILayout.Button("generate typescript"))
+                {
+                    var code = DisplayUtility.GenTsCode(_instance.GenPairs(), "public", false);
+                    List<string> content = new List<string>();
+
+                    content.Add($"class {target.name} {{");
+                    content.Add(code);
+                    content.Add($"}}");
+
+                    File.WriteAllLines("./TypeScript/src/gen/" + $"{target.name}" + ".ts", content.ToArray());
                 }
                 //Check key Toggles
                 EditorGUILayout.BeginHorizontal();
@@ -1073,6 +1085,39 @@ namespace UnityEditor.GUI
                 if (!CheckKeyValidity(keyStr))
                     keyStr = "[\"" + keyStr + "\"]";
                 resultCode += $"{declareType} {keyStr}: {typeStr};";
+            }
+            return resultCode;
+        }
+        public static string GenTsCode(TSProperties.ResultPair[] pairs, string declareType, bool useFullname)
+        {
+            var resultCode = "";
+            declareType = declareType.Trim();
+            foreach (var pair in pairs)
+            {
+                if (!string.IsNullOrEmpty(resultCode))
+                    resultCode += "\n";
+                var typeStr = GetTypeName(null, useFullname);
+                if (pair.value != null)
+                {
+                    typeStr = GetTypeName(pair.value.GetType(), useFullname);
+                    if (pair.value.GetType().IsArray && ((Array)pair.value).Length > 0)
+                    {
+                        var arr = (Array)pair.value;
+                        for (int i = 0; i < arr.Length; i++)
+                        {
+                            var o = arr.GetValue(i);
+                            if (o != null && !o.Equals(null))
+                            {
+                                typeStr = "System.Array$1<" + GetTypeName(o.GetType(), useFullname) + ">";
+                                break;
+                            }
+                        }
+                    }
+                }
+                var keyStr = pair.key;
+                if (!CheckKeyValidity(keyStr))
+                    keyStr = "[\"" + keyStr + "\"]";
+                resultCode += $"\t{declareType} {keyStr}: {typeStr}";
             }
             return resultCode;
         }
