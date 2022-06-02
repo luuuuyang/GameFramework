@@ -365,7 +365,7 @@ namespace UnityEditor.GUI
                 }
                 if (GUILayout.Button("generate typescript"))
                 {
-                    var code = DisplayUtility.GenTsCode(_instance.GenPairs(), "public", false);
+                    var code = DisplayUtility.GenTsCode(_instance.GenPairs(), "private", false);
                     List<string> content = new List<string>();
 
                     content.Add($"class {target.name} {{");
@@ -1091,6 +1091,7 @@ namespace UnityEditor.GUI
         public static string GenTsCode(TSProperties.ResultPair[] pairs, string declareType, bool useFullname)
         {
             var resultCode = "";
+            var gameObject = "gameObject: GameObject";
             declareType = declareType.Trim();
             foreach (var pair in pairs)
             {
@@ -1119,6 +1120,38 @@ namespace UnityEditor.GUI
                     keyStr = "[\"" + keyStr + "\"]";
                 resultCode += $"\t{declareType} {keyStr}: {typeStr}";
             }
+            resultCode += $"\n\tconstructor({gameObject}) {{";
+            resultCode += $"\n\t\tthis.gameObect = gameObject";
+            resultCode += $"\n\t\tlet propsComponent = this.gameObject.GetComponent($typeof(TSProperties)) as TSProperties";
+            for (int i = 0; i < pairs.Length; i++)
+            {
+                var pair = pairs[i];
+                if (!string.IsNullOrEmpty(resultCode))
+                    resultCode += "\n";
+                var typeStr = GetTypeName(null, useFullname);
+                if (pair.value != null)
+                {
+                    typeStr = GetTypeName(pair.value.GetType(), useFullname);
+                    if (pair.value.GetType().IsArray && ((Array)pair.value).Length > 0)
+                    {
+                        var arr = (Array)pair.value;
+                        for (int j = 0; j < arr.Length; j++)
+                        {
+                            var o = arr.GetValue(j);
+                            if (o != null && !o.Equals(null))
+                            {
+                                typeStr = "System.Array$1<" + GetTypeName(o.GetType(), useFullname) + ">";
+                                break;
+                            }
+                        }
+                    }
+                }
+                var keyStr = pair.key;
+                if (!CheckKeyValidity(keyStr))
+                    keyStr = "[\"" + keyStr + "\"]";
+                resultCode += $"\t\tthis.{keyStr} = propsComponent.Pairs.get_Item({i}).value";
+            }
+            resultCode += "\n\t}";
             return resultCode;
         }
         public static void PraseCode(TSProperties_CustomEditor editor, string code)

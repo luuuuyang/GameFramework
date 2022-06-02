@@ -3,7 +3,10 @@ require("tools/source-map-support")
 import { DG, TSBehaviour, TSProperties, UnityEngine, xasset } from "csharp"
 import { $promise, $typeof } from "puerts"
 import { GameObject, Vector3 } from "Utils/Components"
+import { UIManager } from "./Manager"
 import { InstantiateAsync, LoadAsync } from "./resource"
+
+let m_UIManager = new UIManager()
 
 class Entrance {
     bindTo: TSBehaviour
@@ -15,16 +18,16 @@ class Entrance {
         this.bindTo.JsOnDestroy = () => this.OnDestroy()
     }
     OnStart(): void {
-        this.Initialize()
+        m_UIManager.OnStart()
     }
     OnUpdate(): void {
-
+        m_UIManager.OnUpdate()
     }
     OnFixedUpdate(): void {
         
     }
     OnDestroy(): void {
-        
+        m_UIManager.OnDestroy()   
     }
 
     private cube!: xasset.InstantiateObject
