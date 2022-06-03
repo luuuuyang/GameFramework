@@ -3,9 +3,9 @@ import { UnityEngine } from "csharp"
 /**
  * TsBehaviour is the base interface from which every Typescript object implements.
  */
-interface TsBehaviour {
+export interface TsBehaviour {
     /**
-     * The GameObject bound to
+     * Mono GameObject
      */
     gameObject?: UnityEngine.GameObject
     OnStart(): void
@@ -16,8 +16,10 @@ interface TsBehaviour {
     OnDestroy(): void
 }
 
-interface UIBase extends TsBehaviour {
-    
+export interface ObjectBase extends TsBehaviour {
+    gameObject: UnityEngine.GameObject
 }
 
-export { TsBehaviour, UIBase }
+export interface UIBase extends TsBehaviour {
+    gameObject: UnityEngine.GameObject
+}

@@ -1,42 +1,65 @@
 import { System, xasset } from "csharp"
 import { $promise } from "puerts"
+import { GameObject } from "Utils/Components"
 
-let m_AssetLoaded: Set<string> = new Set<string>()
-let m_AssetInstantiated: Map<string, number> = new Map<string, number>()
+//#region 
+let m_LoadedAssets = new Map<string, xasset.Asset>()
+let m_InstantiatedObjects = new Map<GameObject, xasset.InstantiateObject>()
+//#endregion
 
-function InstantiateAsync(assetPath: string) {
-    // m_AssetInstantiated.set(assetPath,  (m_AssetInstantiated.get(assetPath) ?? 0) + 1)
-    return xasset.InstantiateObject.InstantiateAsync(assetPath)
-}
-
-function Load(path: string, type: System.Type) {
-    return xasset.Asset.Load(path, type)
-}
-
-async function LoadAsync(path: string, type: System.Type, completed?: System.Action$1<xasset.Asset>) {
-    if (!m_AssetLoaded.has(path)) {
-        let onCompleted = () => {
-            m_AssetLoaded.add(path)
-        }
-        if (completed) {
-            System.Delegate.Combine(completed, onCompleted)
-        }
-        else {
-            completed = onCompleted
-        }
-        return xasset.Asset.LoadAsync(path, type, completed)
+//#region Instantiate
+export function InstantiateAsync(assetPath: string) {
+    assetPath = "Assets/Resources/" + assetPath + ".prefab"
+    let instantiateObject = xasset.InstantiateObject.InstantiateAsync(assetPath)
+    // todo: Combine
+    // System.Delegate.Combine(instantiateObject.completed)
+    instantiateObject.completed = () => {
+        m_InstantiatedObjects.set(instantiateObject.result, instantiateObject)
     }
-    else {
-        console.log("asset '" + path + "' has been loaded")
+    return instantiateObject
+}
+
+export function Destroy(gameObject: GameObject) {
+    let instantiateObject = m_InstantiatedObjects.get(gameObject)
+    if (instantiateObject !== undefined) {
+        m_InstantiatedObjects.delete(gameObject)
+        instantiateObject.Destroy()
     }
 }
+//#endregion
 
-function LoadWithSubAssets(path: string, type: System.Type) {
+//#region Load
+export function Load(path: string, type: System.Type) {
+    if (m_LoadedAssets.get(path) === undefined) {
+        let asset = xasset.Asset.Load(path, type)
+        m_LoadedAssets.set(path, asset)
+        return asset
+    }
+}
+
+export function LoadAsync(path: string, type: System.Type, completed?: System.Action$1<xasset.Asset>) {
+    if (m_LoadedAssets.get(path) === undefined) {
+        let asset = xasset.Asset.LoadAsync(path, type)
+        asset.completed = () => {
+            m_LoadedAssets.set(path, asset)
+        }
+        return asset
+    }
+}
+
+export function Release(path: string) {
+    let asset = m_LoadedAssets.get(path)
+    if (asset !== undefined) {
+        m_LoadedAssets.delete(path)
+        asset.Release()
+    }
+}
+
+export function LoadWithSubAssets(path: string, type: System.Type) {
     return xasset.Asset.LoadWithSubAssets(path, type)
 }
 
-function LoadWithSubAssetsAsync(path: string, type: System.Type) {
+export function LoadWithSubAssetsAsync(path: string, type: System.Type) {
     return xasset.Asset.LoadWithSubAssetsAsync(path, type)
 }
-
-export {InstantiateAsync, Load, LoadAsync, LoadWithSubAssets, LoadWithSubAssetsAsync}
+//#endregion
