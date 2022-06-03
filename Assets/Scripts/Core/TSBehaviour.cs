@@ -26,7 +26,7 @@ public class TSBehaviour : MonoBehaviour
             jsEnv = new JsEnv(new Loader("E:/UnityProject/GameFramework/TypeScript/outPut/"), 9229);
             //jsEnv = new JsEnv(new Loader("E:/UnityProject/GameFramework/Assets/StreamingAssets/"), 9229);
         }
-        jsEnv.WaitDebugger();
+        // jsEnv.WaitDebugger();
         var init = jsEnv.Eval<LoaderInit>($"const Entrance = require('{EntranceMod}'); Entrance.Init");
         if (init != null)
         {
