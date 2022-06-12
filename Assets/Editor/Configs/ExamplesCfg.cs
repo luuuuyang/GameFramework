@@ -32,6 +32,7 @@ public class ExamplesCfg
                 typeof(GameObject),
                 typeof(UnityEngine.Object),
                 typeof(Delegate),
+                typeof(Action),
                 typeof(System.Object),
                 typeof(System.Array),
                 typeof(System.IO.Path),

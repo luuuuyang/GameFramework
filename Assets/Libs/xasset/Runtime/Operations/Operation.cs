@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace xasset
 {
+    public delegate void OperationAction(Operation operation);
+
     public enum OperationStatus
     {
         Idle,
@@ -16,7 +18,7 @@ namespace xasset
     public class Operation : IEnumerator
     {
         private static readonly List<Operation> Processing = new List<Operation>();
-        public Action<Operation> completed;
+        public OperationAction completed;
         public OperationStatus status { get; protected set; } = OperationStatus.Idle;
         public float progress { get; protected set; }
         public bool isDone => status == OperationStatus.Failed || status == OperationStatus.Success;

@@ -8,19 +8,23 @@ using UnityEngine.SceneManagement;
 
 namespace xasset
 {
+    public delegate void SceneAction(Scene scene);
+
+    public delegate void AsyncOperationAction(AsyncOperation asyncOperation);
+
     public class Scene : Loadable, IEnumerator
     {
-        public static Action<Scene> onSceneUnloaded;
-        public static Action<Scene> onSceneLoaded;
+        public static SceneAction onSceneUnloaded;
+        public static SceneAction onSceneLoaded;
 
         private static readonly List<AsyncOperation> Progressing = new List<AsyncOperation>();
 
         private static readonly List<string> scenesInBuild = new List<string>();
         public readonly List<Scene> additives = new List<Scene>();
-        public Action<Scene> completed;
-        public Action<AsyncOperation> onload;
+        public SceneAction completed;
+        public AsyncOperationAction onload;
         protected string sceneName;
-        public Action<Scene> updated;
+        public SceneAction updated;
         protected bool mustCompleteOnNextFrame { get; set; }
         public static Func<string, bool, Scene> Creator { get; set; } = Create;
 
@@ -76,7 +80,7 @@ namespace xasset
             return Creator(path, additive);
         }
 
-        public static Scene LoadAsync(string assetPath, Action<Scene> completed = null, bool additive = false)
+        public static Scene LoadAsync(string assetPath, SceneAction completed = null, bool additive = false)
         {
             if (string.IsNullOrEmpty(assetPath)) throw new ArgumentNullException(nameof(assetPath));
 

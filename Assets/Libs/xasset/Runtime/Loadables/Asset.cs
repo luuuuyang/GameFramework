@@ -6,11 +6,13 @@ using Object = UnityEngine.Object;
 
 namespace xasset
 {
+    public delegate void AssetAction(Asset asset);
+    
     public class Asset : Loadable, IEnumerator
     {
         public static readonly Dictionary<string, Asset> Cache = new Dictionary<string, Asset>();
 
-        public Action<Asset> completed;
+        public AssetAction completed;
 
         public static Func<string, Type, Asset> Creator { get; set; } = BundledAsset.Create;
 
@@ -81,7 +83,7 @@ namespace xasset
             Cache.Remove(pathOrURL);
         }
 
-        public static Asset LoadAsync(string path, Type type, Action<Asset> completed = null)
+        public static Asset LoadAsync(string path, Type type, AssetAction completed = null)
         {
             return LoadInternal(path, type, completed);
         }
@@ -113,7 +115,7 @@ namespace xasset
         }
 
         private static Asset LoadInternal(string path, Type type,
-            Action<Asset> completed = null)
+            AssetAction completed = null)
         {
             PathManager.GetActualPath(ref path);
             if (!Versions.Contains(path))
