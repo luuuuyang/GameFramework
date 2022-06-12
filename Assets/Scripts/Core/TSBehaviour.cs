@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using Puerts;
 using xasset;
+using UnityEngine.InputSystem;
 
 public class TSBehaviour : MonoBehaviour
 {
@@ -32,6 +33,8 @@ public class TSBehaviour : MonoBehaviour
         {
             init(this);
         }
+
+        jsEnv.UsingAction<InputAction.CallbackContext>();
     }
 
     void OnEnable()

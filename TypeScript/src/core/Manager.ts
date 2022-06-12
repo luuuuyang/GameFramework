@@ -1,4 +1,4 @@
-import { System, UnityEngine } from "csharp"
+import { CSInputManager, System, UnityEngine } from "csharp"
 import { $promise } from "puerts"
 import { ObjectBase, TsBehaviour, UIBase } from "./interface"
 import { Destroy, InstantiateAsync } from "./resource"
@@ -7,6 +7,18 @@ type Constructor<T> = new(...args: any[]) => T
 
 abstract class Factory {
     abstract New(ctor: Constructor<TsBehaviour>): void;
+}
+
+class InputManager_Internal implements TsBehaviour {
+    private m_CSInputManager = CSInputManager.Instance as CSInputManager
+    OnStart(): void {
+        this.m_CSInputManager.OnKeyCallback = new CSInputManager.TsCallback(context => {
+            console.log("ts input call back")
+        })
+    }
+    OnDestroy(): void {
+        
+    }
 }
 
 class UIManager_Internal implements TsBehaviour {
@@ -89,5 +101,6 @@ class ObjectManager_Internal implements TsBehaviour {
     }
 }
 
+export const InputManager = new InputManager_Internal()
 export const ObjectManager = new ObjectManager_Internal()
 export const UIManager = new UIManager_Internal()

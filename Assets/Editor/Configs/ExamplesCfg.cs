@@ -43,6 +43,8 @@ public class ExamplesCfg
                 typeof(RenderMode),
                 typeof(Behaviour),
                 typeof(MonoBehaviour),
+                typeof(UnityEngine.InputSystem.InputAction),
+                typeof(Singleton<CSInputManager>),
 
                 typeof(UnityEngine.EventSystems.UIBehaviour),
                 typeof(UnityEngine.UI.Selectable),

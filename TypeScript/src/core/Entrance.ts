@@ -4,7 +4,7 @@ import { DG, TSBehaviour, TSProperties, UnityEngine, xasset } from "csharp"
 import { MainMenu } from "gen/MainMenu"
 import { $promise, $typeof } from "puerts"
 import { GameObject, Vector3 } from "Utils/Components"
-import { UIManager, ObjectManager } from "./manager"
+import { UIManager, ObjectManager, InputManager } from "./manager"
 import { InstantiateAsync, LoadAsync } from "./resource"
 
 class Entrance {
@@ -17,6 +17,7 @@ class Entrance {
         this.bindTo.JsOnDestroy = () => this.OnDestroy()
     }
     OnStart(): void {
+        InputManager.OnStart()
         ObjectManager.OnStart()
         UIManager.OnStart()
 
