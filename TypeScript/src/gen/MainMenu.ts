@@ -4,6 +4,8 @@ import { InstantiateAsync } from "core/resource"
 import { TSProperties, UnityEngine, xasset } from "csharp"
 import { $promise, $typeof } from "puerts"
 import { GameObject } from "Utils/Components"
+import { $TsButton } from "utils/UIComponent"
+import { GetComponent, QuitGame, T } from "utils/Utils"
 import { Cube } from "./cube"
 
 class MainMenu implements UIBase {
@@ -19,22 +21,29 @@ class MainMenu implements UIBase {
 		this.btnExit = propsComponent.Pairs.get_Item(2).value
 	}
 	OnStart(): void {
-        let mainMenuCanvas = this.gameObject.GetComponent($typeof(UnityEngine.Canvas)) as UnityEngine.Canvas
+		UnityEngine.Screen.SetResolution(1280,720,UnityEngine.FullScreenMode.Windowed)
+        let mainMenuCanvas = GetComponent<UnityEngine.Canvas>(this.gameObject,T(UnityEngine.Canvas))
         let mainCamera = GameObject.Find("Main Camera")
-        mainMenuCanvas.worldCamera = mainCamera.GetComponent($typeof(UnityEngine.Camera)) as UnityEngine.Camera
+		if(mainMenuCanvas!=null){
+			let cam = GetComponent<UnityEngine.Camera>(mainCamera,T(UnityEngine.Camera))
+			if(cam!=null){
+				mainMenuCanvas.worldCamera = cam
+			}	
+		}
 
-		let btnStart = this.btnStart.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
-		btnStart.onClick.AddListener(() => {
+		let btnStart = $TsButton(this.btnStart)
+		btnStart?.Click(() => {
 			UIManager.Close(this)
 			ObjectManager.InstantiateAsync(Cube)
 		})
 
-		let btnSetting = this.btnSetting.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
-		btnSetting.onClick.AddListener(() => {
+		let btnSetting = $TsButton(this.btnSetting)
+		btnSetting?.Click(() => {
 		})
 
-		let btnExit = this.btnExit.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
-		btnExit.onClick.AddListener(() => {
+		let btnExit = $TsButton(this.btnExit)
+		btnExit?.Click(() => {
+			QuitGame()
 		})
 	}
 	OnDestroy(): void {
