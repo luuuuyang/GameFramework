@@ -1,5 +1,5 @@
 import { UIBase } from "core/interface"
-import { ObjectManager, UIManager } from "core/manager"
+import { ObjectManager, UIManager } from "core/Manager"
 import { InstantiateAsync } from "core/resource"
 import { TSProperties, UnityEngine, xasset } from "csharp"
 import { $promise, $typeof } from "puerts"

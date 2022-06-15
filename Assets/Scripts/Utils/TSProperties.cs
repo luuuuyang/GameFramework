@@ -8,6 +8,11 @@ using System.Reflection;
 using UnityEditor;
 #endif
 
+public enum TemplateType{
+    UIObj,
+    GameObject
+}
+
 [DisallowMultipleComponent]
 public class TSProperties : MonoBehaviour
 {
@@ -21,6 +26,9 @@ public class TSProperties : MonoBehaviour
             return _pairs;
         }
     }
+
+    [SerializeField]
+    public TemplateType templateType = TemplateType.UIObj;
 
     void Awake()
     {
@@ -234,6 +242,8 @@ namespace UnityEditor.GUI
 
             DisplayScript();
 
+            _instance.templateType = (TemplateType)EditorGUILayout.EnumPopup("Template Type",_instance.templateType);
+
             var elements = drawList.list as List<Element>;
             elements.Clear();
             elements.AddRange(GetElements());
@@ -368,9 +378,25 @@ namespace UnityEditor.GUI
                     var code = DisplayUtility.GenTsCode(_instance.GenPairs(), "private", false);
                     List<string> content = new List<string>();
 
-                    content.Add($"class {target.name} {{");
+                    string BaseTemplate = "";
+                    switch(_instance.templateType){
+                        case TemplateType.UIObj:
+                            BaseTemplate = "UIBase";
+                            break;
+                        case TemplateType.GameObject:
+                            BaseTemplate = "ObjectBase";
+                            break;
+                    }
+
+                    string implementText = "";
+                    if(BaseTemplate!=""){
+                        implementText = $"implements {BaseTemplate}";
+                    }
+
+                    content.Add($"class {target.name} {implementText} {{");
                     content.Add(code);
                     content.Add($"}}");
+                    content.Add($"export{{ {target.name} }}");
 
                     File.WriteAllLines("./TypeScript/src/gen/" + $"{target.name}" + ".ts", content.ToArray());
                 }

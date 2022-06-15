@@ -4,7 +4,7 @@ import { DG, TSBehaviour, TSProperties, UnityEngine, xasset } from "csharp"
 import { MainMenu } from "gen/MainMenu"
 import { $promise, $typeof } from "puerts"
 import { GameObject, Vector3 } from "Utils/Components"
-import { UIManager, ObjectManager, InputManager } from "./manager"
+import { UIManager, ObjectManager, InputManager } from "./Manager"
 import { InstantiateAsync, LoadAsync } from "./resource"
 
 class Entrance {
