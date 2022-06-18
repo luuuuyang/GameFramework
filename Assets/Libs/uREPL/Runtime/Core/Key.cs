@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 namespace uREPL
 {
@@ -8,17 +9,17 @@ public static class KeyUtil
 {
     public static bool Shift()
     {
-        return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        return Keyboard.current[Key.LeftShift].isPressed || Keyboard.current[Key.RightShift].isPressed;
     }
 
     public static bool Alt()
     {
-        return Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
+        return Keyboard.current[Key.LeftAlt].isPressed || Keyboard.current[Key.RightAlt].isPressed;
     }
 
     public static bool Control()
     {
-        return Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+        return Keyboard.current[Key.LeftCtrl].isPressed || Keyboard.current[Key.RightCtrl].isPressed;
     }
 
     public static bool ControlOrShift()
@@ -28,7 +29,7 @@ public static class KeyUtil
 
     public static bool Enter()
     {
-        return Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter);
+        return Keyboard.current[Key.Enter].wasPressedThisFrame || Keyboard.current[Key.NumpadEnter].wasPressedThisFrame;
     }
 }
 
@@ -43,11 +44,11 @@ public class KeyEvent
     public delegate void KeyEventHandler();
     class EventInfo
     {
-        public KeyCode key;
+        public Key key;
         public Option option;
         public int counter;
         public System.Action onKeyEvent;
-        public EventInfo(KeyCode key, Option option, System.Action onKeyEvent)
+        public EventInfo(Key key, Option option, System.Action onKeyEvent)
         {
             this.key = key;
             this.option = option;
@@ -57,12 +58,12 @@ public class KeyEvent
     }
     private List<EventInfo> keyEventList_ = new List<EventInfo>();
 
-    public void Add(KeyCode code, Option option, System.Action onKeyEvent)
+    public void Add(Key code, Option option, System.Action onKeyEvent)
     {
         keyEventList_.Add(new EventInfo(code, option, onKeyEvent));
     }
 
-    public void Add(KeyCode code, System.Action onKeyEvent)
+    public void Add(Key code, System.Action onKeyEvent)
     {
         Add(code, Option.None, onKeyEvent);
     }
@@ -85,7 +86,7 @@ public class KeyEvent
             case Option.CtrlOrShift : option = KeyUtil.ControlOrShift(); break;
         }
 
-        if (Input.GetKey(info.key) && option) {
+        if (Keyboard.current[info.key].isPressed && option) {
             ++info.counter;
         } else {
             info.counter = 0;

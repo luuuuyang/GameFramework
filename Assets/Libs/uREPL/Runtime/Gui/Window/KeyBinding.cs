@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace uREPL
 {
@@ -39,8 +40,8 @@ public class KeyBinding
     }
 
     private KeyEvent keyEvent_ = new KeyEvent();
-    [SerializeField] KeyCode openKey = KeyCode.F1;
-    [SerializeField] KeyCode closeKey = KeyCode.F1;
+    [SerializeField] Key openKey = Key.F1;
+    [SerializeField] Key closeKey = Key.F1;
 
     public void Initialize(Window parent)
     {
@@ -52,70 +53,70 @@ public class KeyBinding
 
     private void InitializeArrowKeys()
     {
-        keyEvent_.Add(KeyCode.UpArrow, Prev);
-        keyEvent_.Add(KeyCode.DownArrow, Next);
-        keyEvent_.Add(KeyCode.LeftArrow, StopCompletion);
-        keyEvent_.Add(KeyCode.RightArrow, StopCompletion);
+        keyEvent_.Add(Key.UpArrow, Prev);
+        keyEvent_.Add(Key.DownArrow, Next);
+        keyEvent_.Add(Key.LeftArrow, StopCompletion);
+        keyEvent_.Add(Key.RightArrow, StopCompletion);
     }
 
     private void InitializeCommands()
     {
-        keyEvent_.Add(KeyCode.Escape, StopCompletion);
-        keyEvent_.Add(KeyCode.Tab, () => {
+        keyEvent_.Add(Key.Escape, StopCompletion);
+        keyEvent_.Add(Key.Tab, () => {
             if (completionView.hasItem) {
                 window_.DoCompletion();
             } else {
                 window_.StartCompletion();
             }
         });
-        keyEvent_.Add(KeyCode.M, KeyEvent.Option.Ctrl, commandView.ToggleLineType);
+        keyEvent_.Add(Key.M, KeyEvent.Option.Ctrl, commandView.ToggleLineType);
     }
 
     private void InitializeEmacsLikeKeys()
     {
-        keyEvent_.Add(KeyCode.P, KeyEvent.Option.Ctrl, Prev);
-        keyEvent_.Add(KeyCode.N, KeyEvent.Option.Ctrl, Next);
-        keyEvent_.Add(KeyCode.F, KeyEvent.Option.Ctrl, () => {
+        keyEvent_.Add(Key.P, KeyEvent.Option.Ctrl, Prev);
+        keyEvent_.Add(Key.N, KeyEvent.Option.Ctrl, Next);
+        keyEvent_.Add(Key.F, KeyEvent.Option.Ctrl, () => {
             inputField.MoveCaretPosition(1);
             StopCompletion();
         });
-        keyEvent_.Add(KeyCode.B, KeyEvent.Option.Ctrl, () => {
+        keyEvent_.Add(Key.B, KeyEvent.Option.Ctrl, () => {
             inputField.MoveCaretPosition(-1);
             StopCompletion();
         });
-        keyEvent_.Add(KeyCode.A, KeyEvent.Option.Ctrl, () => {
+        keyEvent_.Add(Key.A, KeyEvent.Option.Ctrl, () => {
             inputField.MoveCaretPositionToLineHead();
             StopCompletion();
         });
-        keyEvent_.Add(KeyCode.E, KeyEvent.Option.Ctrl, () => {
+        keyEvent_.Add(Key.E, KeyEvent.Option.Ctrl, () => {
             inputField.MoveCaretPositionToLineEnd();
             StopCompletion();
         });
-        keyEvent_.Add(KeyCode.H, KeyEvent.Option.Ctrl, () => {
+        keyEvent_.Add(Key.H, KeyEvent.Option.Ctrl, () => {
             inputField.BackspaceOneCharacterFromCaretPosition();
             StopCompletion();
         });
-        keyEvent_.Add(KeyCode.D, KeyEvent.Option.Ctrl, () => {
+        keyEvent_.Add(Key.D, KeyEvent.Option.Ctrl, () => {
             inputField.DeleteOneCharacterFromCaretPosition();
             StopCompletion();
         });
-        keyEvent_.Add(KeyCode.K, KeyEvent.Option.Ctrl, () => {
+        keyEvent_.Add(Key.K, KeyEvent.Option.Ctrl, () => {
             inputField.DeleteCharactersToLineEndAfterCaretPosition();
             StopCompletion();
         });
-        keyEvent_.Add(KeyCode.L, KeyEvent.Option.Ctrl, window_.outputView.Clear);
+        keyEvent_.Add(Key.L, KeyEvent.Option.Ctrl, window_.outputView.Clear);
     }
 
     private void ToggleWindowByKeys()
     {
         if (openKey == closeKey) {
-            if (Input.GetKeyDown(openKey)) {
+            if (Keyboard.current[openKey].wasPressedThisFrame) {
                 if (!window_.isOpen) window_.Open();
                 else window_.Close();
             }
         } else {
-            if (Input.GetKeyDown(openKey)) window_.Open();
-            if (Input.GetKeyDown(closeKey)) window_.Close();
+            if (Keyboard.current[openKey].wasPressedThisFrame) window_.Open();
+            if (Keyboard.current[closeKey].wasPressedThisFrame) window_.Close();
         }
     }
 
