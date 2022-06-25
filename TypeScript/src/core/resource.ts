@@ -1,6 +1,6 @@
-import { System, xasset } from "csharp"
+import { System, UnityEngine, xasset } from "csharp"
 import { $promise, $typeof } from "puerts"
-import { GameObject } from "Utils/Components"
+import { Application, GameObject } from "Utils/Components"
 
 //#region 
 let m_LoadedAssets = new Map<string, xasset.Asset>()
@@ -9,7 +9,12 @@ let m_InstantiatedObjects = new Map<GameObject, xasset.InstantiateObject>()
 
 //#region Instantiate
 export function InstantiateAsync(assetPath: string) {
-    assetPath = "Assets/Resources/" + assetPath + ".prefab"
+    if (Application.platform == UnityEngine.RuntimePlatform.Android){
+        assetPath = System.IO.Path.Combine(Application.streamingAssetsPath , assetPath + ".prefab") 
+    }else{
+        assetPath = "Assets/Resources/" + assetPath + ".prefab"
+    }
+    
     let instantiateObject = xasset.InstantiateObject.InstantiateAsync(assetPath)
     let customCompleted = new xasset.OperationAction(operation => {
         m_InstantiatedObjects.set(instantiateObject.result, instantiateObject)

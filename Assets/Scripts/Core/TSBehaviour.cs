@@ -4,6 +4,7 @@ using System.Collections;
 using Puerts;
 using xasset;
 using UnityEngine.InputSystem;
+using UnityEngine.Networking;
 
 public class TSBehaviour : MonoBehaviour
 {
@@ -44,6 +45,21 @@ public class TSBehaviour : MonoBehaviour
 
     IEnumerator Start()
     {
+        #if UNITY_ANDROID 
+        var url = new System.Uri(System.IO.Path.Combine(Application.streamingAssetsPath,"Entrance.js.txt"));
+        UnityWebRequest req = UnityWebRequest.Get(url);
+        yield return req.SendWebRequest();
+
+        if (req.result == UnityWebRequest.Result.ConnectionError)
+        {
+            Debug.LogError(req.error);
+        }
+        else
+        {
+            System.IO.File.WriteAllText(System.IO.Path.Combine(Application.persistentDataPath,"Entrance.js.txt"),req.downloadHandler.text);
+        }
+
+        #endif
         RunScript();
 
         var customLoader = GetComponent<CustomLoader>();
@@ -57,7 +73,7 @@ public class TSBehaviour : MonoBehaviour
 
     void Update()
     {
-        jsEnv.Tick();
+        jsEnv?.Tick();
         if (JsUpdate != null) JsUpdate();
     }
 
