@@ -3,6 +3,7 @@ import { ObjectManager } from "core/manager"
 import { InstantiateAsync } from "core/resource"
 import { TSProperties, UnityEngine } from "csharp"
 import { $promise, $typeof } from "puerts"
+import { GetCurrentTurn, GoNextTurn, InitTurnBase, RegCalculate, RegEnterTurn, SetTurnBase, StartTurn, TurnBaseState } from "System/TurnBaseSystem"
 import { GameObject, Vector3 } from "Utils/Components"
 import { Item } from "./Item"
 
@@ -35,6 +36,35 @@ export class HUD implements UIBase {
 	
 	async OnStart() {
 		console.log("HUD Onstart")
+
+		//完全初始化回合
+		InitTurnBase()
+
+		//每回合开始前运行
+		RegEnterTurn(()=>{
+			if(GetCurrentTurn()==TurnBaseState.Left){
+				//设置左边状态
+				console.warn("prepare left")
+			}else{
+				//设置右边状态
+				console.warn("prepare right")
+			}
+		})
+
+		//每回合结算
+		RegCalculate(()=>{
+			if(GetCurrentTurn()==TurnBaseState.Left){
+				//设置左边状态
+				console.warn("left end")
+			}else{
+				//设置右边状态
+				console.warn("right end")
+			}
+		})
+
+		//全部回合结束时运行
+
+
 		for (let i = 0; i < this.maxRow; i++) {
 			this.leftItems[i] = []
 			this.rightItems[i] = []
@@ -44,6 +74,13 @@ export class HUD implements UIBase {
 				leftItem.gameObject.transform.localScale = Vector3.one;
 				leftItem.SetListener(() => {
 					console.log("left", i, j)
+
+					if(GetCurrentTurn()!=TurnBaseState.Left){
+						return
+					}
+
+					console.warn("Do Left")
+					GoNextTurn()
 				})
 				this.leftItems[i][j] = leftItem
 				
@@ -51,11 +88,22 @@ export class HUD implements UIBase {
 				rightItem.gameObject.transform.SetParent(this.rightZone.transform)
 				rightItem.gameObject.transform.localScale = Vector3.one;
 				rightItem.SetListener(() => {
+
+					if(GetCurrentTurn()!=TurnBaseState.Right){
+						return
+					}
+
 					console.log("right", i, j)
+					console.warn("Do Left")
+					GoNextTurn()
 				})
 				this.rightItems[i][j] = rightItem
 			}
 		}
+
+		SetTurnBase(TurnBaseState.Left)
+		StartTurn()
+		
 	}
 	OnDestroy(): void {
 		
