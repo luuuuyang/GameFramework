@@ -2,6 +2,7 @@ import { ObjectBase, UIBase } from "core/interface"
 import { ObjectManager } from "core/manager"
 import { InstantiateAsync } from "core/resource"
 import { System, TextureReplacer, TSProperties, UnityEngine } from "csharp"
+import { EffectDefines } from "Datas/Effects"
 import { $promise, $typeof } from "puerts"
 import { GameObject, Vector3 } from "Utils/Components"
 import { FlyTo, JumpOut } from "utils/SimpleAnimation"
@@ -22,6 +23,7 @@ export class Item implements ObjectBase {
 	private txt: GameObject
 	public type:ItemType
 	public effect:GameObject|null
+	private effectName:string = ""
 	public side:Side|null
 	private hud:HUD|null
 	constructor(gameObject: GameObject) {
@@ -46,11 +48,12 @@ export class Item implements ObjectBase {
 		this.hud = hud
 	}
 
-	async SetTypeAndEffect(side:Side,type:ItemType,itemName:string|null){
+	async SetTypeAndEffect(side:Side,type:ItemType,effectName:string|null){
 		this.side = side
 		this.type = type
-		if (itemName!=null){
-			let instantiateObject = InstantiateAsync(itemName)
+		if (effectName!=null){
+			
+			let instantiateObject = InstantiateAsync(effectName)
         	await $promise(instantiateObject.Task)
         	let result = instantiateObject.result
 
@@ -58,6 +61,7 @@ export class Item implements ObjectBase {
 			result.transform.localPosition = Vector3.zero
 			result.transform.localScale = Vector3.one
 			this.effect = result
+			this.effectName = effectName
 			result.SetActive(false)
 		}
 		
@@ -74,20 +78,47 @@ export class Item implements ObjectBase {
 			return
 		}
 
-		if(this.type == ItemType.Collect){
-			this.effect?.SetActive(true)
-			if(this.effect!=null){
-				JumpOut(this.effect,0.1,1.2,1,0.3,0.1,()=>{
+		if(this.effect==null){
+			return
+		}
+		this.effect.SetActive(true)
+		JumpOut(this.effect,0.1,1.2,1,0.3,0.1,()=>{
+			if(this.type == ItemType.Immediate){
+				if(this.effectName!=""){
+					if(EffectDefines[this.effectName]!=undefined){
+						let effect = EffectDefines[this.effectName]()
+						if(this.side!=null && this.hud!=null){
+							effect.Init({
+								hud:this.hud,
+								side:this.side,
+								effectObj:this.effect!
+							})
+							effect.Excute(callBack)
+						}
+						
+					}else{
+						console.error("No this effect "+this.effectName)
+					}
+				}
+				return
+			}
+	
+			if(this.type == ItemType.Collect){
+				
+				if(this.effect!=null){
+	
 					if(this.hud!=null){
 						FlyTo(this.effect!,this.hud.GetBag(this.side!),0.3,()=>{
 							callBack()
 						})
 						
 					}
+				}
+			}	
 					
-				})
-			}
-		}
+		})
+
+
 	}
 
 	SetTexture(index:number){

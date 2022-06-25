@@ -94,7 +94,7 @@ export class HUD implements UIBase {
 				rightItem.gameObject.transform.SetParent(this.rightZone.transform)
 				rightItem.gameObject.transform.localScale = Vector3.one;
 
-				await rightItem.SetTypeAndEffect(Side.Right,ItemType.Collect,EffectNames.Medicine)
+				await rightItem.SetTypeAndEffect(Side.Right,ItemType.Immediate,EffectNames.Medicine)
 				rightItem.SetHUD(this)
 				rightItem.SetListener(() => {
 					console.log("right", i, j)
@@ -103,7 +103,7 @@ export class HUD implements UIBase {
 					}
 					rightItem.OpenMe(()=>{
 						
-						console.warn("Do Left")
+						console.warn("Do Right")
 						GoNextTurn()
 					})
 					
@@ -124,6 +124,15 @@ export class HUD implements UIBase {
 			return this.rightBag
 		}
 	}
+
+	GetHealth(side:Side):GameObject{
+		if(side==Side.Left){
+			return this.leftZone
+		}else{
+			return this.rightZone
+		}
+	}
+
 	OnDestroy(): void {
 		
 	}
