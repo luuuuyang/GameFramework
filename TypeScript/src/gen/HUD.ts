@@ -4,7 +4,8 @@ import { InstantiateAsync } from "core/resource"
 import { TSProperties, UnityEngine } from "csharp"
 import { EffectNames } from "Datas/Effects"
 import { $promise, $typeof } from "puerts"
-import { GetCurrentTurn, GoNextTurn, InitTurnBase, RegCalculate, RegEnterTurn, SetTurnBase, StartTurn, TurnBaseState } from "System/TurnBaseSystem"
+import { CanClick, LockClick, UnlockClick } from "System/ClickController"
+import { GetCurrentTurn, GoNextTurn, InitTurnBase, RegCalculate, RegEndAllTurn, RegEnterTurn, SetTurnBase, StartTurn, TurnBaseState } from "System/TurnBaseSystem"
 import { GameObject, Vector3 } from "Utils/Components"
 import { T } from "utils/Utils"
 import { Heart, HeartState } from "./Heart"
@@ -163,10 +164,14 @@ export class HUD implements UIBase {
 				//设置右边状态
 				console.warn("prepare right")
 			}
+			this.leftBag.SetActive(GetCurrentTurn()==TurnBaseState.Left)
+			this.rightBag.SetActive(GetCurrentTurn()==TurnBaseState.Right)
+			UnlockClick()
 		})
 
 		//每回合结算
 		RegCalculate(()=>{
+			LockClick()
 			if(GetCurrentTurn()==TurnBaseState.Left){
 				//设置左边状态
 				console.warn("left end")
@@ -177,6 +182,9 @@ export class HUD implements UIBase {
 		})
 
 		//全部回合结束时运行
+		RegEndAllTurn(()=>{
+
+		})
 
 
 		for (let i = 0; i < this.maxRow; i++) {
@@ -190,11 +198,15 @@ export class HUD implements UIBase {
 				await leftItem.SetTypeAndEffect(Side.Left,ItemType.Collect,EffectNames.Medicine)
 				leftItem.SetHUD(this)
 				leftItem.SetListener(() => {
+					if(!CanClick()){
+						return
+					}
 					console.log("left", i, j)
 
 					if(GetCurrentTurn()!=TurnBaseState.Left){
 						return
 					}
+					LockClick()
 					leftItem.OpenMe(()=>{
 						console.warn("Do Left")
 						GoNextTurn()
@@ -210,10 +222,16 @@ export class HUD implements UIBase {
 				await rightItem.SetTypeAndEffect(Side.Right,ItemType.Immediate,EffectNames.Medicine)
 				rightItem.SetHUD(this)
 				rightItem.SetListener(() => {
+
+					if(!CanClick()){
+						return
+					}
+
 					console.log("right", i, j)
 					if(GetCurrentTurn()!=TurnBaseState.Right){
 						return
 					}
+					LockClick()
 					rightItem.OpenMe(()=>{
 						
 						console.warn("Do Right")
@@ -240,9 +258,9 @@ export class HUD implements UIBase {
 
 	GetHealth(side:Side):GameObject{
 		if(side==Side.Left){
-			return this.leftZone
+			return this.leftHeartBar
 		}else{
-			return this.rightZone
+			return this.rightHeartBar
 		}
 	}
 

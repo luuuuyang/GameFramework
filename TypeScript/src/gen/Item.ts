@@ -89,9 +89,12 @@ export class Item implements ObjectBase {
 							effect.Init({
 								hud:this.hud,
 								side:this.side,
-								effectObj:this.effect!
+								effectObj:this.effect!,
+								itemObj:this.gameObject
+							},()=>{
+								effect.Excute(callBack)
 							})
-							effect.Excute(callBack)
+							
 						}
 						
 					}else{
