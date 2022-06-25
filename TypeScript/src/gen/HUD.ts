@@ -6,6 +6,7 @@ import { EffectNames } from "Datas/Effects"
 import { $promise, $typeof } from "puerts"
 import { GetCurrentTurn, GoNextTurn, InitTurnBase, RegCalculate, RegEnterTurn, SetTurnBase, StartTurn, TurnBaseState } from "System/TurnBaseSystem"
 import { GameObject, Vector3 } from "Utils/Components"
+import { T } from "utils/Utils"
 import { Heart, HeartState } from "./Heart"
 import { Item, ItemType } from "./Item"
 
@@ -119,6 +120,8 @@ export class HUD implements UIBase {
 		this.rightBag = propsComponent.Pairs.get_Item(3).value
 		this.leftHeartBar = propsComponent.Pairs.get_Item(4).value
 		this.rightHeartBar = propsComponent.Pairs.get_Item(5).value
+		let canvas = (this.gameObject.GetComponent(T(UnityEngine.Canvas)) as UnityEngine.Canvas)
+		canvas.worldCamera = UnityEngine.Camera.main
 	}
 	
 	async OnStart() {

@@ -7,6 +7,7 @@ interface IEffect{
     env:ENV|null
     Init(env:ENV):void
     Excute(callBack:System.Action):void
+    Use(callBack:System.Action):void
 }
 
 type ENV ={
@@ -21,6 +22,9 @@ export const EffectNames = {
 }
 
 class Effect_Medicine implements IEffect{
+    Use(callBack: System.Action): void {
+        this.Excute(callBack)
+    }
     Excute(callBack:System.Action): void {
         // manager 加血
         console.warn("Use a medicine")
