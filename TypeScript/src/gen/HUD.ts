@@ -2,10 +2,11 @@ import { UIBase } from "core/interface"
 import { ObjectManager } from "core/manager"
 import { InstantiateAsync } from "core/resource"
 import { TSProperties, UnityEngine } from "csharp"
+import { EffectNames } from "Datas/Effects"
 import { $promise, $typeof } from "puerts"
 import { GetCurrentTurn, GoNextTurn, InitTurnBase, RegCalculate, RegEnterTurn, SetTurnBase, StartTurn, TurnBaseState } from "System/TurnBaseSystem"
 import { GameObject, Vector3 } from "Utils/Components"
-import { Item } from "./Item"
+import { Item, ItemType } from "./Item"
 
 export enum Side {
 	Left, Right
@@ -72,30 +73,40 @@ export class HUD implements UIBase {
 				let leftItem = await ObjectManager.InstantiateAsync(Item) as Item
 				leftItem.gameObject.transform.SetParent(this.leftZone.transform)
 				leftItem.gameObject.transform.localScale = Vector3.one;
+				
+				await leftItem.SetTypeAndEffect(Side.Left,ItemType.Collect,EffectNames.Medicine)
+				leftItem.SetHUD(this)
 				leftItem.SetListener(() => {
 					console.log("left", i, j)
 
 					if(GetCurrentTurn()!=TurnBaseState.Left){
 						return
 					}
-
-					console.warn("Do Left")
-					GoNextTurn()
+					leftItem.OpenMe(()=>{
+						console.warn("Do Left")
+						GoNextTurn()
+					})
+					
 				})
 				this.leftItems[i][j] = leftItem
 				
 				let rightItem = await ObjectManager.InstantiateAsync(Item) as Item
 				rightItem.gameObject.transform.SetParent(this.rightZone.transform)
 				rightItem.gameObject.transform.localScale = Vector3.one;
-				rightItem.SetListener(() => {
 
+				await rightItem.SetTypeAndEffect(Side.Right,ItemType.Collect,EffectNames.Medicine)
+				rightItem.SetHUD(this)
+				rightItem.SetListener(() => {
+					console.log("right", i, j)
 					if(GetCurrentTurn()!=TurnBaseState.Right){
 						return
 					}
-
-					console.log("right", i, j)
-					console.warn("Do Left")
-					GoNextTurn()
+					rightItem.OpenMe(()=>{
+						
+						console.warn("Do Left")
+						GoNextTurn()
+					})
+					
 				})
 				this.rightItems[i][j] = rightItem
 			}
@@ -104,6 +115,14 @@ export class HUD implements UIBase {
 		SetTurnBase(TurnBaseState.Left)
 		StartTurn()
 		
+	}
+
+	GetBag(side:Side):GameObject{
+		if(side==Side.Left){
+			return this.leftBag
+		}else{
+			return this.rightBag
+		}
 	}
 	OnDestroy(): void {
 		

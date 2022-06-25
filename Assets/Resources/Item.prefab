@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4568060570640355666}
   - component: {fileID: 7304105379709221268}
   - component: {fileID: 1376343990569929268}
+  - component: {fileID: 3670255322937940465}
   m_Layer: 5
   m_Name: Item
   m_TagString: Untagged
@@ -147,6 +148,21 @@ MonoBehaviour:
     value: {fileID: 5220519237487492299}
   ObjectArrayPairs: []
   GameObjectArrayPairs: []
+--- !u!114 &3670255322937940465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762468177274636518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8c3072f69224204990690ffda56983b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Textures:
+  - {fileID: 21300000, guid: 408de705161a0b34c9fb50d0819b097b, type: 3}
+  - {fileID: 21300000, guid: 378cf0f6de713dc429566591608724e6, type: 3}
 --- !u!1 &5220519237487492299
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,4 +241,4 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: 
