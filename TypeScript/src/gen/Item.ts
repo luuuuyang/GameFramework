@@ -20,7 +20,6 @@ export enum ItemType{
 export class Item implements ObjectBase {
 	public gameObject: GameObject
 	private btn: GameObject
-	private txt: GameObject
 	public type:ItemType
 	public effect:GameObject|null
 	private effectName:string = ""
@@ -30,7 +29,6 @@ export class Item implements ObjectBase {
 		this.gameObject = gameObject
 		let propsComponent = this.gameObject.GetComponent($typeof(TSProperties)) as TSProperties
 		this.btn = propsComponent.Pairs.get_Item(0).value
-		this.txt = propsComponent.Pairs.get_Item(1).value
 		this.type = ItemType.UnSet
 		this.effect = null
 		this.side = null
@@ -57,7 +55,7 @@ export class Item implements ObjectBase {
         	await $promise(instantiateObject.Task)
         	let result = instantiateObject.result
 
-			result.transform.parent = this.gameObject.transform
+			result.transform.SetParent(this.gameObject.transform)
 			result.transform.localPosition = Vector3.zero
 			result.transform.localScale = Vector3.one
 			this.effect = result
