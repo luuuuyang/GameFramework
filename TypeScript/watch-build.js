@@ -48,6 +48,7 @@ chokidar.watch('./src').on('all', (event, path) => {
         sourcemap: true,
         treeShaking: true,
     }).then(result => {
+        console.log("build done")
         copyFolderRecursiveSync("outPut", "../Assets/StreamingAssets")
     })
 });

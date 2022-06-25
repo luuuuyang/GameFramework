@@ -3,7 +3,7 @@ import { ObjectManager } from "core/manager"
 import { InstantiateAsync } from "core/resource"
 import { TSProperties, UnityEngine } from "csharp"
 import { $promise, $typeof } from "puerts"
-import { GameObject } from "Utils/Components"
+import { GameObject, Vector3 } from "Utils/Components"
 import { Item } from "./Item"
 
 export enum Side {
@@ -41,6 +41,7 @@ export class HUD implements UIBase {
 			for (let j = 0; j < this.maxColumn; j++) {
 				let leftItem = await ObjectManager.InstantiateAsync(Item) as Item
 				leftItem.gameObject.transform.SetParent(this.leftZone.transform)
+				leftItem.gameObject.transform.localScale = Vector3.one;
 				leftItem.SetListener(() => {
 					console.log("left", i, j)
 				})
