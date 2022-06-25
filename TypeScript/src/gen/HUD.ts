@@ -5,18 +5,25 @@ import { TSProperties, UnityEngine } from "csharp"
 import { $promise, $typeof } from "puerts"
 import { GetCurrentTurn, GoNextTurn, InitTurnBase, RegCalculate, RegEnterTurn, SetTurnBase, StartTurn, TurnBaseState } from "System/TurnBaseSystem"
 import { GameObject, Vector3 } from "Utils/Components"
+import { Heart, HeartState } from "./Heart"
 import { Item } from "./Item"
 
 export enum Side {
 	Left, Right
 }
 
+enum HeartMode {
+	Whole, Half
+}
+
 export class HUD implements UIBase {
 	public gameObject: GameObject
+	private leftHeartBar: GameObject
 	private leftZone: GameObject
 	private leftBag: GameObject
 	private rightZone: GameObject
 	private rightBag: GameObject
+	private rightHeartBar: GameObject
 
 	private readonly maxRow = 6
 	private readonly maxColumn = 8
@@ -24,6 +31,82 @@ export class HUD implements UIBase {
 	private leftItems: Item[][] = []
 	private rightItems: Item[][] = []
 
+	private _leftHeartValue!: number
+	private set leftHeartValue(value: number) {
+		value = Math.max(0, Math.min(this.heartInitValue, value))
+		this._leftHeartValue = value
+		this._leftHeartCount = this.heartMode === HeartMode.Whole ? value : value / 2
+	}
+	private get leftHeartValue() {
+		return this._leftHeartValue
+	}
+
+	private _rightHeartValue!: number
+	private set rightHeartValue(value: number) {
+		value = Math.max(0, Math.min(this.heartInitValue, value))
+		this._rightHeartValue = value
+		this._rightHeartCount = this.heartMode === HeartMode.Whole ? value : value / 2
+	}
+	private get rightHeartValue() {
+		return this._rightHeartValue
+	}
+
+	private _leftHeartCount!: number
+	private get leftHeartCount() {
+		return this._leftHeartCount
+	}
+
+	private _rightHeartCount!: number
+	private get rightHeartCount() {
+		return this._rightHeartCount
+	}
+
+	private readonly heartMode = HeartMode.Whole
+	private leftHearts = new Array<Heart>()
+	private rightHearts = new Array<Heart>()
+	private readonly heartInitValue = 6
+	private readonly heartInitCount = this.heartMode === HeartMode.Whole ? this.heartInitValue : this.heartInitValue / 2
+
+	public ModifyHeart(side: Side, value: number) {
+		if (value !== 0) {
+			switch (side) {
+				case Side.Left:
+					this.leftHeartValue = this.leftHeartValue + value
+					let tmpLeftHeartValue = this.leftHeartValue
+					for (let i = 0; i < this.heartInitCount; i++) {
+						const heart = this.leftHearts[i]
+						if (tmpLeftHeartValue > 2) {
+							heart.state = HeartState.Full
+						}
+						else if (tmpLeftHeartValue === 1) {
+							heart.state = HeartState.Half
+						}
+						else {
+							heart.state = HeartState.Empty
+						}
+						tmpLeftHeartValue -= 2
+					}
+					break;
+				case Side.Right:
+					this.rightHeartValue = this.rightHeartValue + value
+					let tmpRightHeartValue = this.rightHeartValue
+					for (let i = this.heartInitCount - 1; i >= 0; i--) {
+						const heart = this.rightHearts[i]
+						if (tmpRightHeartValue > 2) {
+							heart.state = HeartState.Full
+						}
+						else if (tmpRightHeartValue === 1) {
+							heart.state = HeartState.Half
+						}
+						else {
+							heart.state = HeartState.Empty
+						}
+						tmpRightHeartValue -= 2
+					}
+					break;
+			}
+		}
+	}
 
 	constructor(gameObject: GameObject) {
 		this.gameObject = gameObject
@@ -32,9 +115,35 @@ export class HUD implements UIBase {
 		this.leftBag = propsComponent.Pairs.get_Item(1).value
 		this.rightZone = propsComponent.Pairs.get_Item(2).value
 		this.rightBag = propsComponent.Pairs.get_Item(3).value
+		this.leftHeartBar = propsComponent.Pairs.get_Item(4).value
+		this.rightHeartBar = propsComponent.Pairs.get_Item(5).value
 	}
 	
 	async OnStart() {
+		const InstantiateHeart = async () => {
+			for (let i = 0; i < this.heartInitCount; i++) {
+				let leftHeart = await ObjectManager.InstantiateAsync(Heart) as Heart
+				this.leftHearts.push(leftHeart)
+				let rightHeart = await ObjectManager.InstantiateAsync(Heart) as Heart
+				this.rightHearts.push(rightHeart)
+			}
+		}
+		const InitializeHeart = () => {
+			this.leftHeartValue = this.heartInitValue
+			this.rightHeartValue = this.heartInitValue
+			this.leftHearts.forEach(heart => {
+				heart.gameObject.transform.SetParent(this.leftHeartBar.transform)
+				heart.gameObject.transform.localScale = Vector3.one
+			})
+			this.rightHearts.forEach(heart => {
+				heart.gameObject.transform.SetParent(this.rightHeartBar.transform)
+				heart.gameObject.transform.localScale = Vector3.one
+			})
+		}
+
+		await InstantiateHeart()
+		InitializeHeart()
+
 		console.log("HUD Onstart")
 
 		//完全初始化回合
@@ -105,6 +214,7 @@ export class HUD implements UIBase {
 		StartTurn()
 		
 	}
+
 	OnDestroy(): void {
 		
 	}
