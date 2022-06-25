@@ -41,10 +41,10 @@ function copyFolderRecursiveSync( source, targetFolder ) {
 chokidar.watch('./src').on('all', (event, path) => {
     esbuild.build({
         bundle: true,
-        entryPoints: ['./src/core/Entrance.ts'],
+        entryPoints: ['./src/core/entrance.ts'],
         external: ['csharp', 'puerts', 'path', 'fs'],
         format: 'cjs',
-        outfile: './outPut/Entrance.js',
+        outfile: './outPut/entrance.js',
         sourcemap: true,
         treeShaking: true,
     }).then(result => {

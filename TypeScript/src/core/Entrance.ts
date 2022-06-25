@@ -4,7 +4,7 @@ import { DG, TSBehaviour, TSProperties, UnityEngine, xasset } from "csharp"
 import { MainMenu } from "gen/MainMenu"
 import { $promise, $typeof } from "puerts"
 import { GameObject, Vector3 } from "Utils/Components"
-import { UIManager, ObjectManager, InputManager } from "./Manager"
+import { UIManager, ObjectManager, InputManager } from "./manager"
 import { InstantiateAsync, LoadAsync } from "./resource"
 
 class Entrance {
@@ -17,6 +17,8 @@ class Entrance {
         this.bindTo.JsOnDestroy = () => this.OnDestroy()
     }
     OnStart(): void {
+        UnityEngine.Screen.SetResolution(1280, 720, UnityEngine.FullScreenMode.Windowed)
+
         InputManager.OnStart()
         ObjectManager.OnStart()
         UIManager.OnStart()

@@ -581,7 +581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 718793235a91f744aa0437fe58bd83d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EntranceMod: Entrance
+  EntranceMod: entrance
 --- !u!114 &1502452090
 MonoBehaviour:
   m_ObjectHideFlags: 0

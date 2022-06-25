@@ -1,54 +1,60 @@
 import { UIBase } from "core/interface"
-import { ObjectManager, UIManager } from "core/Manager"
+import { ObjectManager, UIManager } from "core/manager"
 import { InstantiateAsync } from "core/resource"
 import { TSProperties, UnityEngine, xasset } from "csharp"
 import { $promise, $typeof } from "puerts"
 import { GameObject } from "Utils/Components"
 import { $TsButton } from "utils/UIComponent"
-import { GetComponent, QuitGame, T } from "utils/Utils"
-import { Cube } from "./cube"
+import { QuitGame } from "utils/Utils"
+import { HUD } from "./HUD"
 
-class MainMenu implements UIBase {
+export class MainMenu implements UIBase {
 	public gameObject: GameObject
-	private btnStart: GameObject;
-	private btnSetting: GameObject;
-	private btnExit: GameObject;
+	private btnStart: GameObject
+	private btnExit: GameObject
+	private txtTitle: GameObject
+	private txtStart: GameObject
+	private txtExit: GameObject
 	constructor(gameObject: GameObject) {
 		this.gameObject = gameObject
 		let propsComponent = this.gameObject.GetComponent($typeof(TSProperties)) as TSProperties
 		this.btnStart = propsComponent.Pairs.get_Item(0).value
-		this.btnSetting = propsComponent.Pairs.get_Item(1).value
-		this.btnExit = propsComponent.Pairs.get_Item(2).value
+		this.btnExit = propsComponent.Pairs.get_Item(1).value
+		this.txtTitle = propsComponent.Pairs.get_Item(2).value
+		this.txtStart = propsComponent.Pairs.get_Item(3).value
+		this.txtExit = propsComponent.Pairs.get_Item(4).value
 	}
 	OnStart(): void {
-		UnityEngine.Screen.SetResolution(1280,720,UnityEngine.FullScreenMode.Windowed)
-        let mainMenuCanvas = GetComponent<UnityEngine.Canvas>(this.gameObject,T(UnityEngine.Canvas))
-        let mainCamera = GameObject.Find("Main Camera")
-		if(mainMenuCanvas!=null){
-			let cam = GetComponent<UnityEngine.Camera>(mainCamera,T(UnityEngine.Camera))
-			if(cam!=null){
-				mainMenuCanvas.worldCamera = cam
-			}	
+        let mainMenuCanvas = this.gameObject.GetComponent($typeof(UnityEngine.Canvas)) as UnityEngine.Canvas
+		if (mainMenuCanvas != null) {
+			let mainCamera = GameObject.Find("Main Camera")
+			let camera = mainCamera.GetComponent($typeof(UnityEngine.Camera)) as UnityEngine.Camera
+			if (camera != null) {
+				mainMenuCanvas.worldCamera = camera
+			}
 		}
 
-		let btnStart = $TsButton(this.btnStart)
-		btnStart?.Click(() => {
+		let btnStart = this.btnStart.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
+		btnStart?.onClick.AddListener(() => {
 			UIManager.Close(this)
-			ObjectManager.InstantiateAsync(Cube)
+			UIManager.Open(HUD)
 		})
 
-		let btnSetting = $TsButton(this.btnSetting)
-		btnSetting?.Click(() => {
-		})
-
-		let btnExit = $TsButton(this.btnExit)
-		btnExit?.Click(() => {
+		let btnExit = this.btnExit.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
+		btnExit?.onClick.AddListener(() => {
 			QuitGame()
 		})
+
+		let txtTitle = this.txtTitle.GetComponent($typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text
+		txtTitle.text = "Trick"
+
+		let txtStart = this.txtStart.GetComponent($typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text
+		txtStart.text = "开始"
+
+		let txtExit = this.txtExit.GetComponent($typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text
+		txtExit.text = "退出"
 	}
 	OnDestroy(): void {
 		
 	}
 }
-
-export {MainMenu}
