@@ -49,6 +49,7 @@ export class HUD implements UIBase {
 				
 				let rightItem = await ObjectManager.InstantiateAsync(Item) as Item
 				rightItem.gameObject.transform.SetParent(this.rightZone.transform)
+				rightItem.gameObject.transform.localScale = Vector3.one;
 				rightItem.SetListener(() => {
 					console.log("right", i, j)
 				})
