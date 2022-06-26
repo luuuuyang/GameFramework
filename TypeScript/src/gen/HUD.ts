@@ -32,6 +32,7 @@ export class HUD implements UIBase {
 	private rightZone: GameObject
 	private rightBag: GameObject
 	private rightHeartBar: GameObject
+	private notify: GameObject
 
 	private readonly maxRow = 6
 	private readonly maxColumn = 8
@@ -129,6 +130,7 @@ export class HUD implements UIBase {
 		this.rightBag = propsComponent.Pairs.get_Item(3).value
 		this.leftHeartBar = propsComponent.Pairs.get_Item(4).value
 		this.rightHeartBar = propsComponent.Pairs.get_Item(5).value
+		this.notify = propsComponent.Pairs.get_Item(6).value
 		let canvas = (this.gameObject.GetComponent(T(UnityEngine.Canvas)) as UnityEngine.Canvas)
 		canvas.worldCamera = UnityEngine.Camera.main
 	}
@@ -167,9 +169,11 @@ export class HUD implements UIBase {
 		RegEnterTurn(()=>{
 			if(GetCurrentTurn()==TurnBaseState.Left){
 				//设置左边状态
+				this.ShowNotify("⬅")
 				console.warn("prepare left")
 			}else{
 				//设置右边状态
+				this.ShowNotify("➡")
 				console.warn("prepare right")
 			}
 			// this.leftBag.SetActive(GetCurrentTurn()==TurnBaseState.Left)
@@ -335,6 +339,14 @@ export class HUD implements UIBase {
 			}
 		}
 		return rt
+	}
+
+	ShowNotify(text: string) {
+		const textComponent = this.notify.GetComponent($typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text
+		textComponent.text = text
+		this.notify.transform.DOScale(new Vector3(1.25, 1.25, 1.25), 0.3).OnComplete(() => {
+			this.notify.transform.DOScale(new Vector3(1, 1, 1), 0.3)
+		})
 	}
 
 	OnDestroy(): void {
