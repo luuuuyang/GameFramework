@@ -298,12 +298,12 @@ export class HUD implements UIBase {
 			}
 		}
 		
-		this.LeftItemsLinear.forEach((item)=>{
-			item.ShowInner(()=>{})
-		})
-		this.RightItemsLinear.forEach((item)=>{
-			item.ShowInner(()=>{})
-		})
+		// this.LeftItemsLinear.forEach((item)=>{
+		// 	item.ShowInner(()=>{})
+		// })
+		// this.RightItemsLinear.forEach((item)=>{
+		// 	item.ShowInner(()=>{})
+		// })
 
 		SetTurnBase(TurnBaseState.Left)
 		StartTurn()

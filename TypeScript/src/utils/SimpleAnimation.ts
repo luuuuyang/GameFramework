@@ -17,6 +17,12 @@ function FlyTo(obj:GameObject,target:GameObject,time:number,callBack:System.Acti
     })
 }
 
+function MoveTo(obj:GameObject,target:Vector3,time:number,callBack:System.Action){
+    obj.transform.DOMove(target,time).OnComplete(()=>{
+        callBack()
+    })
+}
+
 function FadeTo(obj:GameObject,target:number,time:number,callBack:System.Action){
     let img = obj.GetComponent(T(UnityEngine.UI.Image)) as UnityEngine.UI.Image
     if(img!=null){
@@ -36,5 +42,6 @@ export {
     JumpOut,
     FlyTo,
     FadeTo,
-    ResetAlpha
+    ResetAlpha,
+    MoveTo
 }

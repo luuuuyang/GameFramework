@@ -41,7 +41,7 @@ function RotateVFX(target:GameObject,Vfx:GameObject){
 
 export const EffectNames = {
     /**
-     * 治疗药()
+     * 治疗药(收集)
      */
     Medicine : "Effect_Medicine",
     
@@ -56,9 +56,19 @@ export const EffectNames = {
     BasicCure : "Effect_Cure",
 
     /**
-     * 显示3个宝箱内容 (立即发动)
+     * 显示3个宝箱内容 (收集)
      */
-    ShowContent : "Effect_ShowContent"
+    ShowContent : "Effect_ShowContent",
+
+    /**
+     * 弓箭攻击（收集）
+     */
+    ArrowAttack :"Effect_ArrowAttack",
+
+    /**
+     * 暗影（立即发动）
+     */
+    Curse:"Effect_Curse"
 }
 
 class Effect_Medicine implements IEffect{
@@ -154,7 +164,7 @@ class Effect_Cure implements IEffect{
             RotateVFX(target,this.healthVFX)
             FlyTo(this.healthVFX,target,0.8,()=>{
                 this.healthVFX?.SetActive(false)
-                this.env?.hud.ModifyHeart(this.env.side,1)
+                this.env?.hud.ModifyHeart(this.env.side,0.5)
                 callBack()
             })
         }else{
@@ -167,6 +177,40 @@ class Effect_Cure implements IEffect{
         this.env = env
 
         this.healthVFX = await InitVFX("green_vfx")
+        ResetVFXTransform(this.env.itemObj,this.healthVFX)
+        callBack()
+    }
+}
+
+class Effect_Curse implements IEffect{
+    healthVFX:GameObject|null = null
+    Use(callBack: System.Action): void {
+        
+    }
+    Excute(callBack:System.Action): void {
+        
+        if(this.env!=null && this.healthVFX!=null){
+            this.env.effectObj.SetActive(false)
+            this.healthVFX.SetActive(true)
+
+            let target = this.env.hud.GetHealth(this.env.side)
+
+            RotateVFX(target,this.healthVFX)
+            FlyTo(this.healthVFX,target,0.8,()=>{
+                this.healthVFX?.SetActive(false)
+                this.env?.hud.ModifyHeart(this.env.side,-1)
+                callBack()
+            })
+        }else{
+            console.error("No env")
+        }
+        
+    }
+    env:ENV|null = null
+    async Init(env:ENV,callBack:System.Action){
+        this.env = env
+
+        this.healthVFX = await InitVFX("purpose_vfx")
         ResetVFXTransform(this.env.itemObj,this.healthVFX)
         callBack()
     }
@@ -229,6 +273,66 @@ class Effect_ShowContent implements IEffect{
     
 }
 
+class Effect_ArrowAttack implements IEffect{
+    env: ENV | null = null
+
+    viewVFXs:Array<GameObject|null> = [null,null,null]
+
+    doneCount:number = 0
+    isDone:boolean = false
+
+    async Init(env: ENV, callBack: System.Action){
+        this.env = env
+
+        this.viewVFXs[0] = await InitVFX("red_vfx")
+        ResetVFXTransform(this.env.itemObj,this.viewVFXs[0])
+        this.viewVFXs[1] = await InitVFX("red_vfx")
+        ResetVFXTransform(this.env.itemObj,this.viewVFXs[1])
+        this.viewVFXs[2] = await InitVFX("red_vfx")
+        ResetVFXTransform(this.env.itemObj,this.viewVFXs[2])
+
+        callBack()
+    }
+
+    CheckIsDone(target:number){
+        return this.doneCount >= target
+    }
+
+    Excute(callBack: System.Action): void {
+        if(this.env==null){
+            return
+        }
+        let targetSide:Side|null = null
+        
+            if(this.env.side == Side.Left){
+                targetSide = Side.Right
+            }else{
+                targetSide = Side.Left
+            }
+
+        let target = this.env.hud.GetHealth(targetSide)
+        for(let i=0;i<3;i++){
+            this.viewVFXs[i]?.SetActive(true)
+            RotateVFX(target.gameObject,this.viewVFXs[i]!)
+            FlyTo(this.viewVFXs[i]!,target.gameObject,0.4+0.4*i,()=>{
+                this.viewVFXs[i]?.SetActive(false)
+                this.doneCount ++
+                
+                this.env!.hud.ModifyHeart(targetSide!,-1)
+                if(this.CheckIsDone(3)&&(!this.isDone)){
+                    this.isDone = true
+                    callBack()
+                }
+                
+            })
+        }
+        
+    }
+    Use(callBack: System.Action): void {
+        
+    }
+}
+
 export const EffectDefines:{[index:string]:()=>IEffect} = {
     [EffectNames.Medicine]:()=>{
         return new Effect_Medicine()
@@ -241,6 +345,12 @@ export const EffectDefines:{[index:string]:()=>IEffect} = {
     },
     [EffectNames.ShowContent]:()=>{
         return new Effect_ShowContent()
+    },
+    [EffectNames.ArrowAttack]:()=>{
+        return new Effect_ArrowAttack()
+    },
+    [EffectNames.Curse]:()=>{
+        return new Effect_Curse()
     }
 }
 
@@ -249,3 +359,4 @@ EffectIndex.set(EffectNames.Medicine, 0)
 EffectIndex.set(EffectNames.BasicAttack, 1)
 EffectIndex.set(EffectNames.BasicCure, 2)
 EffectIndex.set(EffectNames.ShowContent, 3)
+EffectIndex.set(EffectNames.ArrowAttack, 4)

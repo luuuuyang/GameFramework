@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8909078483606091077}
   - component: {fileID: 969104027751384769}
   m_Layer: 5
-  m_Name: Effect_Attack
+  m_Name: Effect_ArrowAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 49df87d88e0b77f4d8ea9189f6892559, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b47c3cddf71484b41a5e7712b2604e0a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

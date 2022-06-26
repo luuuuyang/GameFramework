@@ -3,7 +3,8 @@ import { ObjectManager, UIManager } from "core/manager"
 import { InstantiateAsync } from "core/resource"
 import { TSProperties, UnityEngine, xasset } from "csharp"
 import { $promise, $typeof } from "puerts"
-import { GameObject } from "Utils/Components"
+import { GameObject, Vector3 } from "Utils/Components"
+import { FadeTo, FlyTo, MoveTo } from "utils/SimpleAnimation"
 import { $TsButton } from "utils/UIComponent"
 import { QuitGame } from "utils/Utils"
 import { HUD } from "./HUD"
@@ -13,6 +14,8 @@ export enum MainMenuLayout {
 }
 
 export class MainMenu implements UIBase {
+
+	
 	public gameObject: GameObject
 	private btnStart: GameObject
 	private btnExit: GameObject
@@ -21,6 +24,10 @@ export class MainMenu implements UIBase {
 	private txtTitle: GameObject
 	private txtStart: GameObject
 	private txtExit: GameObject
+	private btnHelp: GameObject
+	private helpPanel: GameObject
+	private isHelpOpen:boolean = false
+
 	constructor(gameObject: GameObject) {
 		this.gameObject = gameObject
 		let propsComponent = this.gameObject.GetComponent($typeof(TSProperties)) as TSProperties
@@ -31,6 +38,8 @@ export class MainMenu implements UIBase {
 		this.txtExit = propsComponent.Pairs.get_Item(4).value
 		this.btnContinue = propsComponent.Pairs.get_Item(5).value
 		this.txtContinue = propsComponent.Pairs.get_Item(6).value
+		this.btnHelp = propsComponent.Pairs.get_Item(5).value
+		this.helpPanel = propsComponent.Pairs.get_Item(6).value
 	}
 
 	private _layout!: MainMenuLayout
@@ -79,7 +88,26 @@ export class MainMenu implements UIBase {
 		let txtExit = this.txtExit.GetComponent($typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text
 		txtExit.text = "退出"
 
+
 		this.layout = MainMenuLayout.Start
+
+
+		let showPos  = this.helpPanel.transform.position
+		let hidePos = new Vector3(showPos.x,showPos.y,showPos.z)
+		hidePos.x = hidePos.x + 1000
+
+		MoveTo(this.helpPanel,hidePos,0,()=>{})
+
+		let btnHelp = this.btnHelp.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
+		btnHelp?.onClick.AddListener(() => {
+			this.isHelpOpen = !this.isHelpOpen
+			if(this.isHelpOpen){
+				MoveTo(this.helpPanel,showPos,0.5,()=>{})
+			}else{
+				MoveTo(this.helpPanel,hidePos,0.5,()=>{})
+			}
+		}) 
+
 	}
 
 	OnDestroy(): void {
