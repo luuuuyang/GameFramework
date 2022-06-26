@@ -205,7 +205,7 @@ export class HUD implements UIBase {
 				leftItem.gameObject.transform.SetParent(this.leftZone.transform)
 				leftItem.gameObject.transform.localScale = Vector3.one;
 				
-				await leftItem.SetTypeAndEffect(Side.Left,ItemType.Collect,EffectNames.BasicAttack)
+				await leftItem.SetTypeAndEffect(Side.Left,ItemType.Immediate,EffectNames.BasicAttack)
 				leftItem.SetHUD(this)
 				leftItem.SetListener(() => {
 					if(!CanClick()){
@@ -234,7 +234,7 @@ export class HUD implements UIBase {
 				rightItem.gameObject.transform.SetParent(this.rightZone.transform)
 				rightItem.gameObject.transform.localScale = Vector3.one;
 
-				await rightItem.SetTypeAndEffect(Side.Right,ItemType.Collect,EffectNames.BasicAttack)
+				await rightItem.SetTypeAndEffect(Side.Right,ItemType.Immediate,EffectNames.BasicAttack)
 				rightItem.SetHUD(this)
 				rightItem.SetListener(() => {
 
