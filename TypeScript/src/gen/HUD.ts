@@ -41,7 +41,7 @@ export class HUD implements UIBase {
 	private set leftHeartValue(value: number) {
 		value = Math.max(0, Math.min(this.heartInitValue, value))
 		this._leftHeartValue = value
-		this._leftHeartCount = this.heartMode === HeartMode.Whole ? value : value / 2
+		this._leftHeartCount = value / 2
 	}
 	private get leftHeartValue() {
 		return this._leftHeartValue
@@ -51,7 +51,7 @@ export class HUD implements UIBase {
 	private set rightHeartValue(value: number) {
 		value = Math.max(0, Math.min(this.heartInitValue, value))
 		this._rightHeartValue = value
-		this._rightHeartCount = this.heartMode === HeartMode.Whole ? value : value / 2
+		this._rightHeartCount = value / 2
 	}
 	private get rightHeartValue() {
 		return this._rightHeartValue
@@ -67,24 +67,25 @@ export class HUD implements UIBase {
 		return this._rightHeartCount
 	}
 
-	private readonly heartMode = HeartMode.Whole
+	private heartMode = HeartMode.Whole
 	private leftHearts = new Array<Heart>()
 	private rightHearts = new Array<Heart>()
-	private readonly heartInitValue = 6
-	private readonly heartInitCount = this.heartMode === HeartMode.Whole ? this.heartInitValue : this.heartInitValue / 2
+	private readonly heartInitCount = 6
+	private readonly heartInitValue = this.heartInitCount * 2
 
 	public ModifyHeart(side: Side, value: number) {
 		if (value !== 0) {
+			value = this.heartMode == HeartMode.Whole ? 2 * value : value
 			switch (side) {
 				case Side.Left:
 					this.leftHeartValue = this.leftHeartValue + value
 					let tmpLeftHeartValue = this.leftHeartValue
 					for (let i = 0; i < this.heartInitCount; i++) {
 						const heart = this.leftHearts[i]
-						if (tmpLeftHeartValue > 2) {
+						if (tmpLeftHeartValue >= 2) {
 							heart.state = HeartState.Full
 						}
-						else if (tmpLeftHeartValue === 1) {
+						else if (tmpLeftHeartValue == 1) {
 							heart.state = HeartState.Half
 						}
 						else {
@@ -101,7 +102,7 @@ export class HUD implements UIBase {
 						if (tmpRightHeartValue > 2) {
 							heart.state = HeartState.Full
 						}
-						else if (tmpRightHeartValue === 1) {
+						else if (tmpRightHeartValue == 1) {
 							heart.state = HeartState.Half
 						}
 						else {
