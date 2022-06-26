@@ -63,7 +63,12 @@ export const EffectNames = {
     /**
      * 弓箭攻击（收集）
      */
-    ArrowAttack :"Effect_ArrowAttack"
+    ArrowAttack :"Effect_ArrowAttack",
+
+    /**
+     * 暗影（立即发动）
+     */
+    Curse:"Effect_Curse"
 }
 
 class Effect_Medicine implements IEffect{
@@ -159,7 +164,7 @@ class Effect_Cure implements IEffect{
             RotateVFX(target,this.healthVFX)
             FlyTo(this.healthVFX,target,0.8,()=>{
                 this.healthVFX?.SetActive(false)
-                this.env?.hud.ModifyHeart(this.env.side,1)
+                this.env?.hud.ModifyHeart(this.env.side,0.5)
                 callBack()
             })
         }else{
@@ -172,6 +177,40 @@ class Effect_Cure implements IEffect{
         this.env = env
 
         this.healthVFX = await InitVFX("green_vfx")
+        ResetVFXTransform(this.env.itemObj,this.healthVFX)
+        callBack()
+    }
+}
+
+class Effect_Curse implements IEffect{
+    healthVFX:GameObject|null = null
+    Use(callBack: System.Action): void {
+        
+    }
+    Excute(callBack:System.Action): void {
+        
+        if(this.env!=null && this.healthVFX!=null){
+            this.env.effectObj.SetActive(false)
+            this.healthVFX.SetActive(true)
+
+            let target = this.env.hud.GetHealth(this.env.side)
+
+            RotateVFX(target,this.healthVFX)
+            FlyTo(this.healthVFX,target,0.8,()=>{
+                this.healthVFX?.SetActive(false)
+                this.env?.hud.ModifyHeart(this.env.side,-1)
+                callBack()
+            })
+        }else{
+            console.error("No env")
+        }
+        
+    }
+    env:ENV|null = null
+    async Init(env:ENV,callBack:System.Action){
+        this.env = env
+
+        this.healthVFX = await InitVFX("purpose_vfx")
         ResetVFXTransform(this.env.itemObj,this.healthVFX)
         callBack()
     }
@@ -309,6 +348,9 @@ export const EffectDefines:{[index:string]:()=>IEffect} = {
     },
     [EffectNames.ArrowAttack]:()=>{
         return new Effect_ArrowAttack()
+    },
+    [EffectNames.Curse]:()=>{
+        return new Effect_Curse()
     }
 }
 

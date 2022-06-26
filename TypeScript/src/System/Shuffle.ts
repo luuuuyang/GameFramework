@@ -22,7 +22,13 @@ function ShuffleItemData(col:number,row:number):Array<ShuffleData>{
             effectName:EffectNames.BasicCure
         })
     }
-    for(let i = 0;i<Math.floor(length*(10/48));i++){
+    for(let i = 0;i<Math.floor(length*(4/48));i++){
+        rt.push({
+            type:ItemType.Immediate,
+            effectName:EffectNames.Curse
+        })
+    }
+    for(let i = 0;i<Math.floor(length*(6/48));i++){
         rt.push({
             type:ItemType.Collect,
             effectName:EffectNames.Medicine
