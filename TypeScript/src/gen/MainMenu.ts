@@ -14,8 +14,6 @@ export enum MainMenuLayout {
 }
 
 export class MainMenu implements UIBase {
-
-	
 	public gameObject: GameObject
 	private btnStart: GameObject
 	private btnExit: GameObject
@@ -36,10 +34,10 @@ export class MainMenu implements UIBase {
 		this.txtTitle = propsComponent.Pairs.get_Item(2).value
 		this.txtStart = propsComponent.Pairs.get_Item(3).value
 		this.txtExit = propsComponent.Pairs.get_Item(4).value
-		this.btnContinue = propsComponent.Pairs.get_Item(5).value
-		this.txtContinue = propsComponent.Pairs.get_Item(6).value
 		this.btnHelp = propsComponent.Pairs.get_Item(5).value
 		this.helpPanel = propsComponent.Pairs.get_Item(6).value
+		this.btnContinue = propsComponent.Pairs.get_Item(7).value
+		this.txtContinue = propsComponent.Pairs.get_Item(8).value
 	}
 
 	private _layout!: MainMenuLayout
