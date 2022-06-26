@@ -41,14 +41,19 @@ function RotateVFX(target:GameObject,Vfx:GameObject){
 
 export const EffectNames = {
     /**
-     * 治疗药
+     * 治疗药()
      */
     Medicine : "Effect_Medicine",
     
     /**
      * 基础攻击（立即发动）
      */
-    BasicAttack : "Effect_Attack"
+    BasicAttack : "Effect_Attack",
+
+    /**
+     * 基础治疗（立即发动）
+     */
+    BasicCure : "Effect_Cure"
 }
 
 class Effect_Medicine implements IEffect{
@@ -96,7 +101,7 @@ class Effect_Attack implements IEffect{
         callBack()
     }
     Excute(callBack: System.Action): void {
-        console.warn("Use a medicine")
+        
         if(this.env!=null && this.attackVFX!=null){
             this.env.effectObj.SetActive(false)
             this.attackVFX.SetActive(true)
@@ -125,12 +130,50 @@ class Effect_Attack implements IEffect{
     
 }
 
+class Effect_Cure implements IEffect{
+    healthVFX:GameObject|null = null
+    Use(callBack: System.Action): void {
+        
+    }
+    Excute(callBack:System.Action): void {
+        // manager 加血
+        
+        if(this.env!=null && this.healthVFX!=null){
+            this.env.effectObj.SetActive(false)
+            this.healthVFX.SetActive(true)
+
+            let target = this.env.hud.GetHealth(this.env.side)
+
+            RotateVFX(target,this.healthVFX)
+            FlyTo(this.healthVFX,target,0.8,()=>{
+                this.healthVFX?.SetActive(false)
+                this.env?.hud.ModifyHeart(this.env.side,1)
+                callBack()
+            })
+        }else{
+            console.error("No env")
+        }
+        
+    }
+    env:ENV|null = null
+    async Init(env:ENV,callBack:System.Action){
+        this.env = env
+
+        this.healthVFX = await InitVFX("green_vfx")
+        ResetVFXTransform(this.env.itemObj,this.healthVFX)
+        callBack()
+    }
+}
+
 export const EffectDefines:{[index:string]:()=>IEffect} = {
     [EffectNames.Medicine]:()=>{
         return new Effect_Medicine()
     },
     [EffectNames.BasicAttack]:()=>{
         return new Effect_Attack()
+    },
+    [EffectNames.BasicCure]:()=>{
+        return new Effect_Cure()
     }
 
 }
