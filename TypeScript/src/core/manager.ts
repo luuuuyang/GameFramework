@@ -14,10 +14,16 @@ class InputManager_Internal implements TsBehaviour {
     private m_CSInputManager = CSInputManager.Instance as CSInputManager
     OnStart(): void {
         this.m_CSInputManager.OnEscCallback = new CSInputManager.InputCallBack(context => {
-            UIManager.GetUIObject("HUD")?.gameObject.SetActive(false)
+            const hud = UIManager.GetUIObject("HUD")
+            if (hud === undefined) {
+                return
+            }
             const mainMenu = UIManager.GetUIObject("MainMenu") as MainMenu
-            mainMenu.gameObject.SetActive(true)
-            mainMenu.layout = MainMenuLayout.Pause
+            if (mainMenu.handleOnEsc) {
+                hud.gameObject.SetActive(false)
+                mainMenu.gameObject.SetActive(true)
+                mainMenu.layout = MainMenuLayout.Pause
+            }
         })
     }
     OnDestroy(): void {

@@ -174,6 +174,9 @@ export class HUD implements UIBase {
 		//完全初始化回合
 		InitTurnBase()
 
+		const mainMenu = UIManager.GetUIObject("MainMenu") as MainMenu
+		mainMenu.handleOnEsc = true
+
 		//每回合开始前运行
 		RegEnterTurn(()=>{
 			if(GetCurrentTurn()==TurnBaseState.Left){
@@ -208,6 +211,8 @@ export class HUD implements UIBase {
 
 		//全部回合结束时运行
 		RegEndAllTurn(() => {
+			const mainMenu = UIManager.GetUIObject("MainMenu") as MainMenu
+			mainMenu.handleOnEsc = false
 			this.mainContent.gameObject.SetActive(false)
 			this.notify.gameObject.SetActive(false)
 			this.resultRoot.gameObject.SetActive(true)

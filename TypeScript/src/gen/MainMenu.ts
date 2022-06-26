@@ -46,6 +46,11 @@ export class MainMenu implements UIBase {
 		this.btnStart.SetActive(value == MainMenuLayout.Start)
 		this.btnContinue.SetActive(value == MainMenuLayout.Pause)
 	}
+	public get layout() {
+		return this._layout
+	}
+
+	public handleOnEsc = true
 
 	OnStart(): void {
         let mainMenuCanvas = this.gameObject.GetComponent($typeof(UnityEngine.Canvas)) as UnityEngine.Canvas
@@ -94,15 +99,19 @@ export class MainMenu implements UIBase {
 		let hidePos = new Vector3(showPos.x,showPos.y,showPos.z)
 		hidePos.x = hidePos.x + 1000
 
-		MoveTo(this.helpPanel,hidePos,0,()=>{})
+		this.helpPanel.gameObject.SetActive(false)
+		// MoveTo(this.helpPanel,hidePos,0,()=>{})
 
 		let btnHelp = this.btnHelp.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
 		btnHelp?.onClick.AddListener(() => {
 			this.isHelpOpen = !this.isHelpOpen
 			if(this.isHelpOpen){
-				MoveTo(this.helpPanel,showPos,0.5,()=>{})
+				MoveTo(this.helpPanel,hidePos,0,()=>{
+					this.helpPanel.gameObject.SetActive(true)
+					MoveTo(this.helpPanel,showPos,0.4,()=>{})
+				})
 			}else{
-				MoveTo(this.helpPanel,hidePos,0.5,()=>{})
+				MoveTo(this.helpPanel,hidePos,0.4,()=>{})
 			}
 		}) 
 
