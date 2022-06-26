@@ -17,7 +17,7 @@ class Entrance {
         this.bindTo.JsOnDestroy = () => this.OnDestroy()
     }
     OnStart(): void {
-        UnityEngine.Screen.SetResolution(1280, 720, UnityEngine.FullScreenMode.Windowed)
+        UnityEngine.Screen.SetResolution(1920, 1080, UnityEngine.FullScreenMode.Windowed)
 
         InputManager.OnStart()
         ObjectManager.OnStart()
