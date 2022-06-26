@@ -23,7 +23,7 @@ class Entrance {
         ObjectManager.OnStart()
         UIManager.OnStart()
 
-        UIManager.Open(MainMenu)
+        UIManager.Open(MainMenu,"MainMenu")
     }
     OnUpdate(): void {
         ObjectManager.OnUpdate()

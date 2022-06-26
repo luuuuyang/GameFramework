@@ -197,7 +197,7 @@ export class HUD implements UIBase {
 				leftItem.gameObject.transform.SetParent(this.leftZone.transform)
 				leftItem.gameObject.transform.localScale = Vector3.one;
 				
-				await leftItem.SetTypeAndEffect(Side.Left,ItemType.Collect,EffectNames.Medicine)
+				await leftItem.SetTypeAndEffect(Side.Left,ItemType.Immediate,EffectNames.BasicCure)
 				leftItem.SetHUD(this)
 				leftItem.SetListener(() => {
 					if(!CanClick()){
@@ -206,6 +206,10 @@ export class HUD implements UIBase {
 					console.log("left", i, j)
 
 					if(GetCurrentTurn()!=TurnBaseState.Left){
+						return
+					}
+
+					if(leftItem.isOpen){
 						return
 					}
 					LockClick()
@@ -221,7 +225,7 @@ export class HUD implements UIBase {
 				rightItem.gameObject.transform.SetParent(this.rightZone.transform)
 				rightItem.gameObject.transform.localScale = Vector3.one;
 
-				await rightItem.SetTypeAndEffect(Side.Right,ItemType.Immediate,EffectNames.Medicine)
+				await rightItem.SetTypeAndEffect(Side.Right,ItemType.Immediate,EffectNames.BasicCure)
 				rightItem.SetHUD(this)
 				rightItem.SetListener(() => {
 
@@ -231,6 +235,10 @@ export class HUD implements UIBase {
 
 					console.log("right", i, j)
 					if(GetCurrentTurn()!=TurnBaseState.Right){
+						return
+					}
+
+					if(rightItem.isOpen){
 						return
 					}
 					LockClick()
