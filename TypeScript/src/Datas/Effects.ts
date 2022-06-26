@@ -318,7 +318,7 @@ class Effect_ArrowAttack implements IEffect{
                 this.viewVFXs[i]?.SetActive(false)
                 this.doneCount ++
                 
-                this.env!.hud.ModifyHeart(targetSide!,-1)
+                this.env!.hud.ModifyHeart(targetSide!,-0.5)
                 if(this.CheckIsDone(3)&&(!this.isDone)){
                     this.isDone = true
                     callBack()
