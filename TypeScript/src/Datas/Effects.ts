@@ -3,7 +3,7 @@ import { System } from "csharp"
 import { HUD, Side } from "gen/HUD"
 import { $promise } from "puerts"
 import { GameObject, Vector3 } from "Utils/Components"
-import { FlyTo } from "utils/SimpleAnimation"
+import { FadeTo, FlyTo } from "utils/SimpleAnimation"
 
 interface IEffect{
     env:ENV|null
@@ -53,7 +53,12 @@ export const EffectNames = {
     /**
      * 基础治疗（立即发动）
      */
-    BasicCure : "Effect_Cure"
+    BasicCure : "Effect_Cure",
+
+    /**
+     * 显示3个宝箱内容 (立即发动)
+     */
+    ShowContent : "Effect_ShowContent"
 }
 
 class Effect_Medicine implements IEffect{
@@ -165,6 +170,60 @@ class Effect_Cure implements IEffect{
     }
 }
 
+class Effect_ShowContent implements IEffect{
+    env: ENV | null = null
+
+    viewVFXs:Array<GameObject|null> = [null,null,null]
+
+    doneCount:number = 0
+    isDone:boolean = false
+
+    async Init(env: ENV, callBack: System.Action){
+        this.env = env
+
+        this.viewVFXs[0] = await InitVFX("yellow_vfx")
+        ResetVFXTransform(this.env.itemObj,this.viewVFXs[0])
+        this.viewVFXs[1] = await InitVFX("yellow_vfx")
+        ResetVFXTransform(this.env.itemObj,this.viewVFXs[1])
+        this.viewVFXs[2] = await InitVFX("yellow_vfx")
+        ResetVFXTransform(this.env.itemObj,this.viewVFXs[2])
+
+        callBack()
+    }
+
+    CheckIsDone(target:number){
+        return this.doneCount >= target
+    }
+
+    Excute(callBack: System.Action): void {
+        if(this.env==null){
+            return
+        }
+        let targets = this.env.hud.GetUnOpenBox(this.env.side,3)
+        
+        for(let i=0;i<3;i++){
+            this.viewVFXs[i]?.SetActive(true)
+            RotateVFX(targets[i].gameObject,this.viewVFXs[i]!)
+            FlyTo(this.viewVFXs[i]!,targets[i].gameObject,0.8,()=>{
+                this.viewVFXs[i]?.SetActive(false)
+                this.doneCount ++
+                targets[i].ShowInner(()=>{
+                    if(this.CheckIsDone(3)&&(!this.isDone)){
+                        this.isDone = true
+                        callBack()
+                    }
+                })
+                
+            })
+        }
+        
+    }
+    Use(callBack: System.Action): void {
+        
+    }
+    
+}
+
 export const EffectDefines:{[index:string]:()=>IEffect} = {
     [EffectNames.Medicine]:()=>{
         return new Effect_Medicine()
@@ -174,6 +233,8 @@ export const EffectDefines:{[index:string]:()=>IEffect} = {
     },
     [EffectNames.BasicCure]:()=>{
         return new Effect_Cure()
+    },
+    [EffectNames.ShowContent]:()=>{
+        return new Effect_ShowContent()
     }
-
 }
