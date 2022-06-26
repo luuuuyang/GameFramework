@@ -80,7 +80,7 @@ export class HUD implements UIBase {
 	private heartMode = HeartMode.Whole
 	private leftHearts = new Array<Heart>()
 	private rightHearts = new Array<Heart>()
-	private readonly heartInitCount = 1
+	private readonly heartInitCount = 6
 	private readonly heartInitValue = this.heartInitCount * 2
 
 	public ModifyHeart(side: Side, value: number) {
