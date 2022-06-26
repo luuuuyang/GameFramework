@@ -38,6 +38,7 @@ class UIManager_Internal implements TsBehaviour {
 
     Close(uiObject: UIBase) {
         let name = uiObject.gameObject.name
+        name = name.substring(0, name.indexOf("(Clone)"))
         this.m_UIObjectList.delete(name)
         uiObject.OnDestroy()
         Destroy(uiObject.gameObject)

@@ -1,18 +1,19 @@
 import { UIBase } from "core/interface"
-import { ObjectManager } from "core/manager"
+import { ObjectManager, UIManager } from "core/manager"
 import { InstantiateAsync } from "core/resource"
 import { TSProperties, UnityEngine } from "csharp"
 import { EffectNames } from "Datas/Effects"
 import { $promise, $typeof } from "puerts"
 import { CanClick, LockClick, UnlockClick } from "System/ClickController"
 import { FYShuffle } from "System/Shuffle"
-import { GetCurrentTurn, GoNextTurn, InitTurnBase, RegCalculate, RegEndAllTurn, RegEnterTurn, SetTurnBase, StartTurn, TurnBaseState } from "System/TurnBaseSystem"
+import { EndAllTurn, GetCurrentTurn, GoNextTurn, InitTurnBase, RegCalculate, RegEndAllTurn, RegEnterTurn, SetTurnBase, StartTurn, TurnBaseState } from "System/TurnBaseSystem"
 import { GameObject, Vector3 } from "Utils/Components"
 import { JumpOut } from "utils/SimpleAnimation"
 import { T } from "utils/Utils"
 import { BagItem } from "./BagItem"
 import { Heart, HeartState } from "./Heart"
 import { Item, ItemType } from "./Item"
+import { MainMenu } from "./MainMenu"
 
 
 export enum Side {
@@ -103,7 +104,7 @@ export class HUD implements UIBase {
 					let tmpRightHeartValue = this.rightHeartValue
 					for (let i = this.heartInitCount - 1; i >= 0; i--) {
 						const heart = this.rightHearts[i]
-						if (tmpRightHeartValue > 2) {
+						if (tmpRightHeartValue >= 2) {
 							heart.state = HeartState.Full
 						}
 						else if (tmpRightHeartValue == 1) {
@@ -178,6 +179,10 @@ export class HUD implements UIBase {
 
 		//每回合结算
 		RegCalculate(()=>{
+			if (this.leftHeartValue == 0 || this.rightHeartValue == 0) {
+				EndAllTurn()
+				return
+			}
 			LockClick()
 			if(GetCurrentTurn()==TurnBaseState.Left){
 				//设置左边状态
@@ -190,7 +195,8 @@ export class HUD implements UIBase {
 
 		//全部回合结束时运行
 		RegEndAllTurn(()=>{
-
+			UIManager.Close(this)
+			UIManager.Open(MainMenu)
 		})
 
 		this.LeftItemsLinear = []
