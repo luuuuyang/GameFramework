@@ -5,12 +5,14 @@ using UnityEngine.InputSystem;
 
 public class CSInputManager : Singleton<CSInputManager>, InputActions_AutoGen.IPlayerActions
 {
-    public delegate void TsCallback(InputAction.CallbackContext context);
+    public delegate void InputCallBack(InputAction.CallbackContext context);
 
-    public TsCallback OnKeyCallback;
+    public InputCallBack OnEscCallback;
 
-    public void OnKey(InputAction.CallbackContext context)
+    public void OnEsc(InputAction.CallbackContext context)
     {
-        OnKeyCallback?.Invoke(context);
+        
+        OnEscCallback?.Invoke(context);
+        
     }
 }

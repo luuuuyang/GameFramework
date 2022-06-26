@@ -3,6 +3,8 @@ import { $promise } from "puerts"
 import { Constructor } from "core/type"
 import { ObjectBase, TsBehaviour, UIBase } from "./interface"
 import { Destroy, InstantiateAsync } from "./resource"
+import { MainMenu, MainMenuType } from "gen/MainMenu"
+import { HUD } from "gen/HUD"
 
 abstract class Factory {
     abstract New(ctor: Constructor<TsBehaviour>): void;
@@ -11,7 +13,12 @@ abstract class Factory {
 class InputManager_Internal implements TsBehaviour {
     private m_CSInputManager = CSInputManager.Instance as CSInputManager
     OnStart(): void {
-       
+        this.m_CSInputManager.OnEscCallback = new CSInputManager.InputCallBack(context => {
+            UIManager.GetUIObject("HUD")?.gameObject.SetActive(false)
+            const mainMenu = UIManager.GetUIObject("MainMenu") as MainMenu
+            mainMenu.gameObject.SetActive(true)
+            mainMenu.SetMenuType(MainMenuType.Pause)
+        })
     }
     OnDestroy(): void {
         
@@ -42,6 +49,12 @@ class UIManager_Internal implements TsBehaviour {
         this.m_UIObjectList.delete(name)
         uiObject.OnDestroy()
         Destroy(uiObject.gameObject)
+    }
+
+    GetUIObject(name: string) {
+        if (this.m_UIObjectList.has(name)) {
+            return this.m_UIObjectList.get(name)
+        }
     }
     
     OnStart(): void {

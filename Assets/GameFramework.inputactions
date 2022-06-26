@@ -6,12 +6,12 @@
             "id": "e07526db-acd3-4e01-8918-e082fd425e97",
             "actions": [
                 {
-                    "name": "Key",
+                    "name": "Esc",
                     "type": "Button",
                     "id": "b4e5025b-cc5a-4f3d-aeb5-a28a9ffadbe9",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(pressPoint=1,behavior=1)",
                     "initialStateCheck": false
                 }
             ],
@@ -19,11 +19,11 @@
                 {
                     "name": "",
                     "id": "b794159d-37e6-4e21-ab8f-db7e27f75435",
-                    "path": "<Keyboard>/anyKey",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Key",
+                    "action": "Esc",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

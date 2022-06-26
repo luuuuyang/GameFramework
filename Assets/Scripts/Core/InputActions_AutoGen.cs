@@ -28,12 +28,12 @@ public partial class @InputActions_AutoGen : IInputActionCollection2, IDisposabl
             ""id"": ""e07526db-acd3-4e01-8918-e082fd425e97"",
             ""actions"": [
                 {
-                    ""name"": ""Key"",
+                    ""name"": ""Esc"",
                     ""type"": ""Button"",
                     ""id"": ""b4e5025b-cc5a-4f3d-aeb5-a28a9ffadbe9"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(pressPoint=1,behavior=1)"",
                     ""initialStateCheck"": false
                 }
             ],
@@ -41,11 +41,11 @@ public partial class @InputActions_AutoGen : IInputActionCollection2, IDisposabl
                 {
                     ""name"": """",
                     ""id"": ""b794159d-37e6-4e21-ab8f-db7e27f75435"",
-                    ""path"": ""<Keyboard>/anyKey"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Key"",
+                    ""action"": ""Esc"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -117,7 +117,7 @@ public partial class @InputActions_AutoGen : IInputActionCollection2, IDisposabl
 }");
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_Key = m_Player.FindAction("Key", throwIfNotFound: true);
+        m_Player_Esc = m_Player.FindAction("Esc", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -177,12 +177,12 @@ public partial class @InputActions_AutoGen : IInputActionCollection2, IDisposabl
     // Player
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
-    private readonly InputAction m_Player_Key;
+    private readonly InputAction m_Player_Esc;
     public struct PlayerActions
     {
         private @InputActions_AutoGen m_Wrapper;
         public PlayerActions(@InputActions_AutoGen wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Key => m_Wrapper.m_Player_Key;
+        public InputAction @Esc => m_Wrapper.m_Player_Esc;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -192,16 +192,16 @@ public partial class @InputActions_AutoGen : IInputActionCollection2, IDisposabl
         {
             if (m_Wrapper.m_PlayerActionsCallbackInterface != null)
             {
-                @Key.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnKey;
-                @Key.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnKey;
-                @Key.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnKey;
+                @Esc.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEsc;
+                @Esc.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEsc;
+                @Esc.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEsc;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Key.started += instance.OnKey;
-                @Key.performed += instance.OnKey;
-                @Key.canceled += instance.OnKey;
+                @Esc.started += instance.OnEsc;
+                @Esc.performed += instance.OnEsc;
+                @Esc.canceled += instance.OnEsc;
             }
         }
     }
@@ -253,6 +253,6 @@ public partial class @InputActions_AutoGen : IInputActionCollection2, IDisposabl
     }
     public interface IPlayerActions
     {
-        void OnKey(InputAction.CallbackContext context);
+        void OnEsc(InputAction.CallbackContext context);
     }
 }
