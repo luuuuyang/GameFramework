@@ -78,6 +78,7 @@ class Effect_Medicine implements IEffect{
             RotateVFX(target,this.healthVFX)
             FlyTo(this.healthVFX,target,0.8,()=>{
                 this.healthVFX?.SetActive(false)
+                this.env!.hud.ModifyHeart(this.env!.side,1)
                 callBack()
             })
         }else{
@@ -121,7 +122,8 @@ class Effect_Attack implements IEffect{
             let target = this.env.hud.GetHealth(targetSide)
             FlyTo(this.attackVFX,target,1,()=>{
                 this.attackVFX?.SetActive(false)
-                this.env?.hud.ModifyHeart(targetSide!,-1)
+                console.log("Damage!!!")
+                this.env?.hud.ModifyHeart(targetSide!,-0.5)
 
                 callBack()
             })

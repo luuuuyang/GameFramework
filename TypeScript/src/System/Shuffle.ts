@@ -1,3 +1,4 @@
+import { EffectNames } from "Datas/Effects"
 import { ItemType } from "gen/Item"
 
 type ShuffleData = {
@@ -8,6 +9,49 @@ type ShuffleData = {
 function ShuffleItemData(col:number,row:number):Array<ShuffleData>{
     let rt = Array<ShuffleData>()
 
+    let length = col*row
+    for(let i = 0;i<Math.floor(length*(6/48));i++){
+        rt.push({
+            type:ItemType.Immediate,
+            effectName:EffectNames.BasicAttack
+        })
+    }
+    for(let i = 0;i<Math.floor(length*(4/48));i++){
+        rt.push({
+            type:ItemType.Immediate,
+            effectName:EffectNames.BasicCure
+        })
+    }
+    for(let i = 0;i<Math.floor(length*(10/48));i++){
+        rt.push({
+            type:ItemType.Collect,
+            effectName:EffectNames.Medicine
+        })
+    }
+    for(let i = 0;i<Math.floor(length*(10/48));i++){
+        rt.push({
+            type:ItemType.Collect,
+            effectName:EffectNames.BasicAttack
+        })
+    }
+    for(let i = 0;i<Math.floor(length*(4/48));i++){
+        rt.push({
+            type:ItemType.Collect,
+            effectName:EffectNames.ShowContent
+        })
+    }
+
+    let emptyLength = (length-rt.length)
+    for(let i = 0;i<emptyLength;i++){
+        rt.push({
+            type:ItemType.Empty,
+            effectName:"NONE"
+        })
+    }
+    console.log(rt.length)
+
+    FYShuffle(rt)
+    FYShuffle(rt)
     return rt
 }
 
