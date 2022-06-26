@@ -21,8 +21,11 @@ class InputManager_Internal implements TsBehaviour {
 class UIManager_Internal implements TsBehaviour {
     private m_UIObjectList = new Map<string, UIBase>()
 
-    async Open(ctor: Constructor<UIBase>) {
+    async Open(ctor: Constructor<UIBase>, prefabName?: string) {
         let name = ctor.name
+        if (prefabName !== undefined) {
+            name = prefabName
+        }
         // UIObject is unique
         if (!this.m_UIObjectList.has(name)) {
             let instantiateObject = InstantiateAsync(name)
