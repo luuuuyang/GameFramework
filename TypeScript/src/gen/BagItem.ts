@@ -2,7 +2,7 @@ import { ObjectBase, UIBase } from "core/interface"
 import { ObjectManager, UIManager } from "core/manager"
 import { InstantiateAsync } from "core/resource"
 import { System, TextureReplacer, TSProperties, UnityEngine } from "csharp"
-import { EffectDefines } from "Datas/Effects"
+import { EffectDefines, EffectIndex } from "Datas/Effects"
 import { $promise, $typeof } from "puerts"
 import { GameObject, Vector3 } from "Utils/Components"
 import { FlyTo, JumpOut } from "utils/SimpleAnimation"
@@ -34,7 +34,7 @@ export class BagItem extends Item {
 		if (effect) {
 			effect.transform.localScale = Vector3.one
 		}
-		this.SetTexture(0)
+		this.SetTexture(EffectIndex.get(this.effectName)!)
 		this.SetListener(() => {
 			if(EffectDefines[this.effectName]!=undefined){
 				let effect = EffectDefines[this.effectName]()

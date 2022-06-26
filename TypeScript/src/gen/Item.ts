@@ -115,7 +115,7 @@ export class Item implements ObjectBase {
 	
 					if(this.hud!=null){
 						FlyTo(this.effect!,this.hud.GetBag(this.side!),0.3,()=>{
-							this.hud?.AddBag(this.side!, this)
+							this.hud?.AddBag(this)
 							callBack()
 						})
 						

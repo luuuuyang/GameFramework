@@ -241,3 +241,9 @@ export const EffectDefines:{[index:string]:()=>IEffect} = {
         return new Effect_ShowContent()
     }
 }
+
+export const EffectIndex = new Map<string, number>()
+EffectIndex.set(EffectNames.Medicine, 0)
+EffectIndex.set(EffectNames.BasicAttack, 1)
+EffectIndex.set(EffectNames.BasicCure, 2)
+EffectIndex.set(EffectNames.ShowContent, 3)

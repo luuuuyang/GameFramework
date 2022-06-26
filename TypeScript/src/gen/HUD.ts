@@ -269,10 +269,17 @@ export class HUD implements UIBase {
 		
 	}
 
-	async AddBag(side: Side, item: Item) {
-		let leftScrollRect = this.leftBag.GetComponent($typeof(UnityEngine.UI.ScrollRect)) as UnityEngine.UI.ScrollRect
+	async AddBag(item: Item) {
 		let bagItem = await ObjectManager.InstantiateAsync(BagItem) as BagItem
-		bagItem.gameObject.transform.SetParent(leftScrollRect.content)
+		const side = item.side
+		let scrollRect: UnityEngine.UI.ScrollRect
+		if (side == Side.Left) {
+			scrollRect = this.leftBag.GetComponent($typeof(UnityEngine.UI.ScrollRect)) as UnityEngine.UI.ScrollRect
+		}
+		else {
+			scrollRect = this.rightBag.GetComponent($typeof(UnityEngine.UI.ScrollRect)) as UnityEngine.UI.ScrollRect
+		}
+		bagItem.gameObject.transform.SetParent(scrollRect.content)
 		bagItem.gameObject.transform.localScale = Vector3.one
 		bagItem.CopyItem(item, () => {
 			GoNextTurn()
