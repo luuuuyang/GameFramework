@@ -5,6 +5,7 @@ import { TSProperties, UnityEngine } from "csharp"
 import { EffectNames } from "Datas/Effects"
 import { $promise, $typeof } from "puerts"
 import { CanClick, LockClick, UnlockClick } from "System/ClickController"
+import { FYShuffle } from "System/Shuffle"
 import { GetCurrentTurn, GoNextTurn, InitTurnBase, RegCalculate, RegEndAllTurn, RegEnterTurn, SetTurnBase, StartTurn, TurnBaseState } from "System/TurnBaseSystem"
 import { GameObject, Vector3 } from "Utils/Components"
 import { JumpOut } from "utils/SimpleAnimation"
@@ -192,21 +193,19 @@ export class HUD implements UIBase {
 
 		})
 
+		this.LeftItemsLinear = []
 
+		this.RightItemsLinear = []
 		for (let i = 0; i < this.maxRow; i++) {
 			this.leftItems[i] = []
 			this.rightItems[i] = []
-
-			this.LeftItemsLinear = []
-
-			this.RightItemsLinear = []
 
 			for (let j = 0; j < this.maxColumn; j++) {
 				let leftItem = await ObjectManager.InstantiateAsync(Item) as Item
 				leftItem.gameObject.transform.SetParent(this.leftZone.transform)
 				leftItem.gameObject.transform.localScale = Vector3.one;
 				
-				await leftItem.SetTypeAndEffect(Side.Left,ItemType.Immediate,EffectNames.ShowContent)
+				await leftItem.SetTypeAndEffect(Side.Left,ItemType.Collect,EffectNames.BasicAttack)
 				leftItem.SetHUD(this)
 				leftItem.SetListener(() => {
 					if(!CanClick()){
@@ -235,7 +234,7 @@ export class HUD implements UIBase {
 				rightItem.gameObject.transform.SetParent(this.rightZone.transform)
 				rightItem.gameObject.transform.localScale = Vector3.one;
 
-				await rightItem.SetTypeAndEffect(Side.Right,ItemType.Immediate,EffectNames.ShowContent)
+				await rightItem.SetTypeAndEffect(Side.Right,ItemType.Collect,EffectNames.BasicAttack)
 				rightItem.SetHUD(this)
 				rightItem.SetListener(() => {
 
@@ -263,7 +262,8 @@ export class HUD implements UIBase {
 				this.RightItemsLinear.push(rightItem)
 			}
 		}
-
+		console.warn(this.LeftItemsLinear.length)
+		console.warn(this.RightItemsLinear.length)
 		SetTurnBase(TurnBaseState.Left)
 		StartTurn()
 		
@@ -299,16 +299,24 @@ export class HUD implements UIBase {
 	GetUnOpenBox(side:Side,num:number):Array<Item>{
 		let rt:Array<Item> = []
 		let items:Array<Item> = []
+		let temps:Array<Item> = []
 		if(side==Side.Left){
 			items = this.LeftItemsLinear
 		}else if(side == Side.Right){
 			items = this.RightItemsLinear
 		}
-
+		console.warn(items.length)
 		for(let i = 0;i<items.length;i++){
 			if(!items[i].isOpen){
-				rt.push(items[i])
+				temps.push(items[i])
 			}
+		}
+
+		FYShuffle(temps)
+		console.warn(temps.length)
+
+		for(let i = 0;i<temps.length;i++){
+			rt.push(temps[i])
 			if(rt.length>=num){
 				break
 			}

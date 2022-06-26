@@ -200,8 +200,11 @@ class Effect_ShowContent implements IEffect{
             return
         }
         let targets = this.env.hud.GetUnOpenBox(this.env.side,3)
-        
-        for(let i=0;i<3;i++){
+        if(targets.length<=0){
+            callBack()
+            return
+        }
+        for(let i=0;i<targets.length;i++){
             this.viewVFXs[i]?.SetActive(true)
             RotateVFX(targets[i].gameObject,this.viewVFXs[i]!)
             FlyTo(this.viewVFXs[i]!,targets[i].gameObject,0.8,()=>{
