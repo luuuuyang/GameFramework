@@ -25,6 +25,7 @@ export class Item implements ObjectBase {
 	private effectName:string = ""
 	public side:Side|null
 	private hud:HUD|null
+	public isOpen = false
 	constructor(gameObject: GameObject) {
 		this.gameObject = gameObject
 		let propsComponent = this.gameObject.GetComponent($typeof(TSProperties)) as TSProperties
@@ -71,15 +72,18 @@ export class Item implements ObjectBase {
 		}
 
 		this.SetTexture(1)
+		this.isOpen = true
 		if(this.type == ItemType.Empty){
-			
+			callBack()
 			return
 		}
 
 		if(this.effect==null){
+			callBack()
 			return
 		}
 		this.effect.SetActive(true)
+		
 		JumpOut(this.effect,0.1,1.2,1,0.3,0.1,()=>{
 			if(this.type == ItemType.Immediate){
 				if(this.effectName!=""){

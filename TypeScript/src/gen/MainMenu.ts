@@ -24,6 +24,7 @@ export class MainMenu implements UIBase {
 		this.txtStart = propsComponent.Pairs.get_Item(3).value
 		this.txtExit = propsComponent.Pairs.get_Item(4).value
 	}
+
 	OnStart(): void {
         let mainMenuCanvas = this.gameObject.GetComponent($typeof(UnityEngine.Canvas)) as UnityEngine.Canvas
 		if (mainMenuCanvas != null) {
@@ -37,7 +38,7 @@ export class MainMenu implements UIBase {
 		let btnStart = this.btnStart.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
 		btnStart?.onClick.AddListener(() => {
 			UIManager.Close(this)
-			UIManager.Open(HUD)
+			UIManager.Open(HUD,"HUD")
 		})
 
 		let btnExit = this.btnExit.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
@@ -46,7 +47,7 @@ export class MainMenu implements UIBase {
 		})
 
 		let txtTitle = this.txtTitle.GetComponent($typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text
-		txtTitle.text = "Trick"
+		txtTitle.text = "Tricky Box Battle!!!"
 
 		let txtStart = this.txtStart.GetComponent($typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text
 		txtStart.text = "开始"
