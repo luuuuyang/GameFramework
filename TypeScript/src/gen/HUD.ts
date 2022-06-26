@@ -36,6 +36,9 @@ export class HUD implements UIBase {
 	private leftItems: Item[][] = []
 	private rightItems: Item[][] = []
 
+	private LeftItemsLinear: Array<Item> =[]
+	private RightItemsLinear: Array<Item> =[]
+
 	private _leftHeartValue!: number
 	private set leftHeartValue(value: number) {
 		value = Math.max(0, Math.min(this.heartInitValue, value))
@@ -191,12 +194,17 @@ export class HUD implements UIBase {
 		for (let i = 0; i < this.maxRow; i++) {
 			this.leftItems[i] = []
 			this.rightItems[i] = []
+
+			this.LeftItemsLinear = []
+
+			this.RightItemsLinear = []
+
 			for (let j = 0; j < this.maxColumn; j++) {
 				let leftItem = await ObjectManager.InstantiateAsync(Item) as Item
 				leftItem.gameObject.transform.SetParent(this.leftZone.transform)
 				leftItem.gameObject.transform.localScale = Vector3.one;
 				
-				await leftItem.SetTypeAndEffect(Side.Left,ItemType.Immediate,EffectNames.BasicCure)
+				await leftItem.SetTypeAndEffect(Side.Left,ItemType.Immediate,EffectNames.ShowContent)
 				leftItem.SetHUD(this)
 				leftItem.SetListener(() => {
 					if(!CanClick()){
@@ -219,12 +227,13 @@ export class HUD implements UIBase {
 					
 				})
 				this.leftItems[i][j] = leftItem
+				this.LeftItemsLinear.push(leftItem)
 				
 				let rightItem = await ObjectManager.InstantiateAsync(Item) as Item
 				rightItem.gameObject.transform.SetParent(this.rightZone.transform)
 				rightItem.gameObject.transform.localScale = Vector3.one;
 
-				await rightItem.SetTypeAndEffect(Side.Right,ItemType.Immediate,EffectNames.BasicCure)
+				await rightItem.SetTypeAndEffect(Side.Right,ItemType.Immediate,EffectNames.ShowContent)
 				rightItem.SetHUD(this)
 				rightItem.SetListener(() => {
 
@@ -249,6 +258,7 @@ export class HUD implements UIBase {
 					
 				})
 				this.rightItems[i][j] = rightItem
+				this.RightItemsLinear.push(rightItem)
 			}
 		}
 
@@ -271,6 +281,26 @@ export class HUD implements UIBase {
 		}else{
 			return this.rightHeartBar
 		}
+	}
+
+	GetUnOpenBox(side:Side,num:number):Array<Item>{
+		let rt:Array<Item> = []
+		let items:Array<Item> = []
+		if(side==Side.Left){
+			items = this.LeftItemsLinear
+		}else if(side == Side.Right){
+			items = this.RightItemsLinear
+		}
+
+		for(let i = 0;i<items.length;i++){
+			if(!items[i].isOpen){
+				rt.push(items[i])
+			}
+			if(rt.length>=num){
+				break
+			}
+		}
+		return rt
 	}
 
 	OnDestroy(): void {

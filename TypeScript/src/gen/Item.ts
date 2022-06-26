@@ -5,7 +5,7 @@ import { System, TextureReplacer, TSProperties, UnityEngine } from "csharp"
 import { EffectDefines } from "Datas/Effects"
 import { $promise, $typeof } from "puerts"
 import { GameObject, Vector3 } from "Utils/Components"
-import { FlyTo, JumpOut } from "utils/SimpleAnimation"
+import { FadeTo, FlyTo, JumpOut, ResetAlpha } from "utils/SimpleAnimation"
 import { T } from "utils/Utils"
 import { HUD, Side } from "./HUD"
 
@@ -71,6 +71,7 @@ export class Item implements ObjectBase {
 			return
 		}
 
+		ResetAlpha(this.gameObject)
 		this.SetTexture(1)
 		this.isOpen = true
 		if(this.type == ItemType.Empty){
@@ -137,6 +138,16 @@ export class Item implements ObjectBase {
 		}else{
 			console.error("需要在item挂载TextureReplacer")
 		}
+	}
+
+	ShowInner(callBack:System.Action){
+		if(this.isOpen){
+			return
+		}
+		this.effect?.SetActive(true)
+		FadeTo(this.gameObject,0.7,0.8,()=>{
+			callBack()
+		})
 	}
 
 	SetListener(call: UnityEngine.Events.UnityAction) {

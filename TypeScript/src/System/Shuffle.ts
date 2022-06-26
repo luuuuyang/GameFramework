@@ -8,8 +8,6 @@ type ShuffleData = {
 function ShuffleItemData(col:number,row:number):Array<ShuffleData>{
     let rt = Array<ShuffleData>()
 
-    
-
     return rt
 }
 
