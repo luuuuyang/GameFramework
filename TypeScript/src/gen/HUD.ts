@@ -5,7 +5,7 @@ import { TSProperties, UnityEngine } from "csharp"
 import { EffectNames } from "Datas/Effects"
 import { $promise, $typeof } from "puerts"
 import { CanClick, LockClick, UnlockClick } from "System/ClickController"
-import { FYShuffle } from "System/Shuffle"
+import { FYShuffle, ShuffleItemData } from "System/Shuffle"
 import { EndAllTurn, GetCurrentTurn, GoNextTurn, InitTurnBase, RegCalculate, RegEndAllTurn, RegEnterTurn, SetTurnBase, StartTurn, TurnBaseState } from "System/TurnBaseSystem"
 import { GameObject, Vector3 } from "Utils/Components"
 import { JumpOut } from "utils/SimpleAnimation"
@@ -206,6 +206,9 @@ export class HUD implements UIBase {
 		this.LeftItemsLinear = []
 
 		this.RightItemsLinear = []
+
+		let leftItemRaws = ShuffleItemData(this.maxColumn,this.maxRow)
+		let rightItemRaws = ShuffleItemData(this.maxColumn,this.maxRow)
 		for (let i = 0; i < this.maxRow; i++) {
 			this.leftItems[i] = []
 			this.rightItems[i] = []
@@ -214,8 +217,8 @@ export class HUD implements UIBase {
 				let leftItem = await ObjectManager.InstantiateAsync(Item) as Item
 				leftItem.gameObject.transform.SetParent(this.leftZone.transform)
 				leftItem.gameObject.transform.localScale = Vector3.one;
-				
-				await leftItem.SetTypeAndEffect(Side.Left,ItemType.Collect,EffectNames.BasicAttack)
+				let rawLeft = leftItemRaws[i*this.maxColumn+j]
+				await leftItem.SetTypeAndEffect(Side.Left,rawLeft.type,rawLeft.effectName)
 				leftItem.SetHUD(this)
 				leftItem.SetListener(() => {
 					if(!CanClick()){
@@ -243,8 +246,8 @@ export class HUD implements UIBase {
 				let rightItem = await ObjectManager.InstantiateAsync(Item) as Item
 				rightItem.gameObject.transform.SetParent(this.rightZone.transform)
 				rightItem.gameObject.transform.localScale = Vector3.one;
-
-				await rightItem.SetTypeAndEffect(Side.Right,ItemType.Collect,EffectNames.BasicAttack)
+				let rawRight = rightItemRaws[i*this.maxColumn+j]
+				await rightItem.SetTypeAndEffect(Side.Right,rawRight.type,rawRight.effectName)
 				rightItem.SetHUD(this)
 				rightItem.SetListener(() => {
 
@@ -272,8 +275,14 @@ export class HUD implements UIBase {
 				this.RightItemsLinear.push(rightItem)
 			}
 		}
-		console.warn(this.LeftItemsLinear.length)
-		console.warn(this.RightItemsLinear.length)
+		
+		this.LeftItemsLinear.forEach((item)=>{
+			item.ShowInner(()=>{})
+		})
+		this.RightItemsLinear.forEach((item)=>{
+			item.ShowInner(()=>{})
+		})
+
 		SetTurnBase(TurnBaseState.Left)
 		StartTurn()
 		
