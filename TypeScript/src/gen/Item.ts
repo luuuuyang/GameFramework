@@ -22,10 +22,11 @@ export class Item implements ObjectBase {
 	private btn: GameObject
 	public type:ItemType
 	public effect:GameObject|null
-	private effectName:string = ""
+	public effectName:string = ""
 	public side:Side|null
-	private hud:HUD|null
+	public hud:HUD|null
 	public isOpen = false
+
 	constructor(gameObject: GameObject) {
 		this.gameObject = gameObject
 		let propsComponent = this.gameObject.GetComponent($typeof(TSProperties)) as TSProperties
@@ -99,7 +100,6 @@ export class Item implements ObjectBase {
 							},()=>{
 								effect.Excute(callBack)
 							})
-							
 						}
 						
 					}else{
@@ -115,6 +115,7 @@ export class Item implements ObjectBase {
 	
 					if(this.hud!=null){
 						FlyTo(this.effect!,this.hud.GetBag(this.side!),0.3,()=>{
+							this.hud?.AddBag(this.side!, this)
 							callBack()
 						})
 						

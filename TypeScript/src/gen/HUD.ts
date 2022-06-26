@@ -9,6 +9,7 @@ import { GetCurrentTurn, GoNextTurn, InitTurnBase, RegCalculate, RegEndAllTurn, 
 import { GameObject, Vector3 } from "Utils/Components"
 import { JumpOut } from "utils/SimpleAnimation"
 import { T } from "utils/Utils"
+import { BagItem } from "./BagItem"
 import { Heart, HeartState } from "./Heart"
 import { Item, ItemType } from "./Item"
 
@@ -168,8 +169,8 @@ export class HUD implements UIBase {
 				//设置右边状态
 				console.warn("prepare right")
 			}
-			this.leftBag.SetActive(GetCurrentTurn()==TurnBaseState.Left)
-			this.rightBag.SetActive(GetCurrentTurn()==TurnBaseState.Right)
+			// this.leftBag.SetActive(GetCurrentTurn()==TurnBaseState.Left)
+			// this.rightBag.SetActive(GetCurrentTurn()==TurnBaseState.Right)
 			UnlockClick()
 		})
 
@@ -265,6 +266,17 @@ export class HUD implements UIBase {
 		SetTurnBase(TurnBaseState.Left)
 		StartTurn()
 		
+	}
+
+	async AddBag(side: Side, item: Item) {
+		let leftScrollRect = this.leftBag.GetComponent($typeof(UnityEngine.UI.ScrollRect)) as UnityEngine.UI.ScrollRect
+		let bagItem = await ObjectManager.InstantiateAsync(BagItem) as BagItem
+		bagItem.gameObject.transform.SetParent(leftScrollRect.content)
+		bagItem.gameObject.transform.localScale = Vector3.one
+		bagItem.CopyItem(item, () => {
+			GoNextTurn()
+		})
+		bagItem.SetHUD(this)
 	}
 
 	GetBag(side:Side):GameObject{
