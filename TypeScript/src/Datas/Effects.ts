@@ -27,7 +27,7 @@ export const EffectNames = {
 class Effect_Medicine implements IEffect{
     healthVFX:GameObject|null = null
     Use(callBack: System.Action): void {
-        this.Excute(callBack)
+        //this.Excute(callBack)
     }
     Excute(callBack:System.Action): void {
         // manager 加血
