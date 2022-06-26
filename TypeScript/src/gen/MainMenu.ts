@@ -64,9 +64,11 @@ export class MainMenu implements UIBase {
 		txtExit.text = "退出"
 
 		this.SetMenuType(MainMenuType.Start)
-		let hidePos  = this.helpPanel.transform.position
-		let showPos = new Vector3(hidePos.x,hidePos.y,hidePos.z)
-		showPos.x = showPos.x - 1000
+		let showPos  = this.helpPanel.transform.position
+		let hidePos = new Vector3(showPos.x,showPos.y,showPos.z)
+		hidePos.x = hidePos.x + 1000
+
+		MoveTo(this.helpPanel,hidePos,0,()=>{})
 
 		let btnHelp = this.btnHelp.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
 		btnHelp?.onClick.AddListener(() => {
