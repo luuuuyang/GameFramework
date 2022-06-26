@@ -8,7 +8,7 @@ import { $TsButton } from "utils/UIComponent"
 import { QuitGame } from "utils/Utils"
 import { HUD } from "./HUD"
 
-export enum MainMenuType {
+export enum MainMenuLayout {
 	Start, Pause
 }
 
@@ -16,6 +16,8 @@ export class MainMenu implements UIBase {
 	public gameObject: GameObject
 	private btnStart: GameObject
 	private btnExit: GameObject
+	private btnContinue: GameObject
+	private txtContinue: GameObject
 	private txtTitle: GameObject
 	private txtStart: GameObject
 	private txtExit: GameObject
@@ -27,6 +29,15 @@ export class MainMenu implements UIBase {
 		this.txtTitle = propsComponent.Pairs.get_Item(2).value
 		this.txtStart = propsComponent.Pairs.get_Item(3).value
 		this.txtExit = propsComponent.Pairs.get_Item(4).value
+		this.btnContinue = propsComponent.Pairs.get_Item(5).value
+		this.txtContinue = propsComponent.Pairs.get_Item(6).value
+	}
+
+	private _layout!: MainMenuLayout
+	public set layout(value: MainMenuLayout) {
+		this._layout = value
+		this.btnStart.SetActive(value == MainMenuLayout.Start)
+		this.btnContinue.SetActive(value == MainMenuLayout.Pause)
 	}
 
 	OnStart(): void {
@@ -38,6 +49,18 @@ export class MainMenu implements UIBase {
 				mainMenuCanvas.worldCamera = camera
 			}
 		}
+
+		let btnStart = this.btnStart.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
+		btnStart?.onClick.AddListener(() => {
+			this.gameObject.SetActive(false)
+			UIManager.Open(HUD, "HUD")
+		})
+
+		let btnContinue = this.btnContinue.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
+		btnContinue?.onClick.AddListener(() => {
+			this.gameObject.SetActive(false)
+			UIManager.GetUIObject("HUD")?.gameObject.SetActive(true)
+		})
 		
 		let btnExit = this.btnExit.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
 		btnExit?.onClick.AddListener(() => {
@@ -45,33 +68,18 @@ export class MainMenu implements UIBase {
 		})
 
 		let txtTitle = this.txtTitle.GetComponent($typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text
-		txtTitle.text = "Tricky Box Battle!!!"		
+		txtTitle.text = "Tricky Box Battle!!!"	
+
+		let txtStart = this.txtStart.GetComponent($typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text
+		txtStart.text = "开始"
+
+		let txtContinue = this.txtContinue.GetComponent($typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text
+		txtContinue.text = "继续"
 
 		let txtExit = this.txtExit.GetComponent($typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text
 		txtExit.text = "退出"
 
-		this.SetMenuType(MainMenuType.Start)
-	}
-
-	SetMenuType(type: MainMenuType) {
-		let btnStart = this.btnStart.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
-		let txtStart = this.txtStart.GetComponent($typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text
-		switch (type) {
-			case MainMenuType.Start:
-				btnStart?.onClick.AddListener(() => {
-					this.gameObject.SetActive(false)
-					UIManager.Open(HUD, "HUD")
-				})
-				txtStart.text = "开始"
-				break;
-			case MainMenuType.Pause:
-				btnStart?.onClick.AddListener(() => {
-					this.gameObject.SetActive(false)
-					UIManager.GetUIObject("HUD")?.gameObject.SetActive(true)
-				})
-				txtStart.text = "继续"
-				break;
-		}
+		this.layout = MainMenuLayout.Start
 	}
 
 	OnDestroy(): void {

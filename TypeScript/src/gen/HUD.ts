@@ -1,7 +1,7 @@
 import { UIBase } from "core/interface"
 import { ObjectManager, UIManager } from "core/manager"
 import { InstantiateAsync } from "core/resource"
-import { TSProperties, UnityEngine } from "csharp"
+import { TextureReplacer, TSProperties, UnityEngine } from "csharp"
 import { EffectNames } from "Datas/Effects"
 import { $promise, $typeof } from "puerts"
 import { CanClick, LockClick, UnlockClick } from "System/ClickController"
@@ -13,7 +13,7 @@ import { T } from "utils/Utils"
 import { BagItem } from "./BagItem"
 import { Heart, HeartState } from "./Heart"
 import { Item, ItemType } from "./Item"
-import { MainMenu } from "./MainMenu"
+import { MainMenu, MainMenuLayout } from "./MainMenu"
 
 
 export enum Side {
@@ -33,6 +33,10 @@ export class HUD implements UIBase {
 	private rightBag: GameObject
 	private rightHeartBar: GameObject
 	private notify: GameObject
+	private mainContent: GameObject
+	private resultRoot: GameObject
+	private resultBar: GameObject
+	private resultAvatar: GameObject
 
 	private readonly maxRow = 6
 	private readonly maxColumn = 8
@@ -76,7 +80,7 @@ export class HUD implements UIBase {
 	private heartMode = HeartMode.Whole
 	private leftHearts = new Array<Heart>()
 	private rightHearts = new Array<Heart>()
-	private readonly heartInitCount = 6
+	private readonly heartInitCount = 1
 	private readonly heartInitValue = this.heartInitCount * 2
 
 	public ModifyHeart(side: Side, value: number) {
@@ -131,6 +135,11 @@ export class HUD implements UIBase {
 		this.leftHeartBar = propsComponent.Pairs.get_Item(4).value
 		this.rightHeartBar = propsComponent.Pairs.get_Item(5).value
 		this.notify = propsComponent.Pairs.get_Item(6).value
+		this.mainContent = propsComponent.Pairs.get_Item(7).value
+		this.resultRoot = propsComponent.Pairs.get_Item(8).value
+		this.resultBar = propsComponent.Pairs.get_Item(9).value
+		this.resultAvatar = propsComponent.Pairs.get_Item(10).value
+		
 		let canvas = (this.gameObject.GetComponent(T(UnityEngine.Canvas)) as UnityEngine.Canvas)
 		canvas.worldCamera = UnityEngine.Camera.main
 	}
@@ -198,13 +207,26 @@ export class HUD implements UIBase {
 		})
 
 		//全部回合结束时运行
-		RegEndAllTurn(()=>{
-			UIManager.Close(this)
-			UIManager.Open(MainMenu)
+		RegEndAllTurn(() => {
+			this.mainContent.gameObject.SetActive(false)
+			this.notify.gameObject.SetActive(false)
+			this.resultRoot.gameObject.SetActive(true)
+			const replacer = this.resultAvatar.GetComponent(T(TextureReplacer)) as TextureReplacer
+			const avatar = this.resultAvatar.GetComponent(T(UnityEngine.UI.Image)) as UnityEngine.UI.Image
+			avatar.sprite = replacer.Textures.get_Item(this.leftHeartValue == 0 ? 1 : 0)
+			this.resultBar.gameObject.transform.localScale = Vector3.zero
+			this.resultBar.gameObject.transform.DOScale(new Vector3(1.5, 1.5, 1.5), 0.25).OnComplete(() => {
+				const btnResult = this.resultRoot.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
+				btnResult.onClick.AddListener(() => {
+					UIManager.Close(this)
+					const mainMenu = UIManager.GetUIObject("MainMenu") as MainMenu
+					mainMenu.gameObject.SetActive(true)
+					mainMenu.layout = MainMenuLayout.Start
+				})
+			})
 		})
 
 		this.LeftItemsLinear = []
-
 		this.RightItemsLinear = []
 
 		let leftItemRaws = ShuffleItemData(this.maxColumn,this.maxRow)
