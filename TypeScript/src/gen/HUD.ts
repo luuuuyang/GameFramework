@@ -219,8 +219,10 @@ export class HUD implements UIBase {
 			const replacer = this.resultAvatar.GetComponent(T(TextureReplacer)) as TextureReplacer
 			const avatar = this.resultAvatar.GetComponent(T(UnityEngine.UI.Image)) as UnityEngine.UI.Image
 			avatar.sprite = replacer.Textures.get_Item(this.leftHeartValue == 0 ? 1 : 0)
-			this.resultBar.gameObject.transform.localScale = Vector3.zero
-			this.resultBar.gameObject.transform.DOScale(new Vector3(1.5, 1.5, 1.5), 0.25).OnComplete(() => {
+			const curScale = this.leftHeartValue == 0 ? Vector3.zero : new Vector3(0.8, 1, 1)
+			const tarScale = this.leftHeartValue == 0 ? new Vector3(1.25, 1.25, 1) : new Vector3(1, 1.25, 1)
+			this.resultBar.gameObject.transform.localScale = curScale
+			this.resultBar.gameObject.transform.DOScale(tarScale, 0.25).OnComplete(() => {
 				const btnResult = this.resultRoot.GetComponent($typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button
 				btnResult.onClick.AddListener(() => {
 					UIManager.Close(this)
