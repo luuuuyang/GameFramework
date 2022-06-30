@@ -1,1 +1,0 @@
-Here is where genrated game datas is.
