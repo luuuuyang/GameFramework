@@ -1,6 +1,12 @@
-# GameFramework
+# 关于这款游戏
  
-基于PuerTS的游戏框架，欢迎学习和提交！
+2022 CiGA Game Jam 作品
+
+适合双人游玩的益智对抗游戏，你永远不知道下一个宝箱点出来是什么，击败对方获取胜利
+
+[Bilibili 地址](https://www.bilibili.com/video/BV1dT411g7uu?spm_id_from=333.999.0.0&vd_source=e68c95a115d28d52befc8ea1da98dba7)
+
+[CiGA Game Jam 地址](https://gmhub.com/game/1246)
 
 ## 编程语言
 C#, TypeScript
@@ -17,8 +23,7 @@ Unity 2020.3.34f1c2, .Net Framework, Node.js
 - ``npm run watch-build``
 - Run Play
 
-# Todo
-## 悲猫3设计构想
+## 架构设计图
 ```mermaid
 classDiagram
 	UIBase <|-- UI_Template_1
